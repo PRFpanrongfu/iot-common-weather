@@ -32,4 +32,21 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
         }
         return weatherDataDailyInfoMapper.selectByCity(city);
     }
+
+    @Override
+    public WeatherDataDailyInfo selectByCodeAndDate(String code, String date) {
+        if (code.trim().length() == 0 || code.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        return weatherDataDailyInfoMapper.selectByCodeAndDate(code, date);
+
+    }
+
+    @Override
+    public WeatherDataDailyInfo selectByCityAndDate(String city, String date) {
+        if (city.trim().length() == 0 || city.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        return weatherDataDailyInfoMapper.selectByCityAndDate(city, date);
+    }
 }

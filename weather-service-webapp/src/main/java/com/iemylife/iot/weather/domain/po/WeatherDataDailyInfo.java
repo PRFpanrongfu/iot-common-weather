@@ -8,6 +8,7 @@ public class WeatherDataDailyInfo {
     private String code;
 
     private String condDayCode;
+    private String condDayTxt;
 
     private String condNightCode;
 
@@ -77,6 +78,14 @@ public class WeatherDataDailyInfo {
 
     public void setCondDayCode(String condDayCode) {
         this.condDayCode = condDayCode == null ? null : condDayCode.trim();
+    }
+
+    public String getCondDayTxt() {
+        return condDayTxt;
+    }
+
+    public void setCondDayTxt(String condDayTxt) {
+        this.condDayTxt = condDayTxt;
     }
 
     public String getCondNightCode() {

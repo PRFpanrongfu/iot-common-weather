@@ -20,29 +20,30 @@
     id, province, city, code, cnty, districtEn, districtZh, lon, lat, createTime, lastUpdateTime,
     isActive, ts
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.CityInfo" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from cityinfo
-        where id = #{id,jdbcType=INTEGER}
+        where code = #{code,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from cityinfo
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-    <insert id="insert" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
-    insert into cityinfo (id, province, city, 
-      code, cnty, districtEn,
-      districtZh, lon, lat, 
-      createTime, lastUpdateTime, isActive, 
-      ts)
-    values (#{id,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{code,jdbcType=VARCHAR}, #{cnty,jdbcType=VARCHAR}, #{districtEn,jdbcType=VARCHAR},
-      #{districtZh,jdbcType=VARCHAR}, #{lon,jdbcType=VARCHAR}, #{lat,jdbcType=VARCHAR},
-      #{createTime,jdbcType=TIMESTAMP}, #{lastupdateTime,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT},
-      #{ts,jdbcType=BIGINT})
-  </insert>
-    <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo" useGeneratedKeys="true" keyProperty="id">
+
+    <select id="selectByCodeAndPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cityinfo
+        where code = #{code,jdbcType=VARCHAR} AND isActive=1
+        ORDER BY ts LIMIT ${page},#{size}
+    </select>
+    <update id="deleteByCode" parameterType="java.lang.String">
+        UPDATE cityinfo
+        SET lastUpdateTime=#{lastUpdateTime,jdbcType=VARCHAR},
+        isActive=#{isActive,jdbcType=VARCHAR},
+        ts=#{ts,jdbcType=BIGINT}
+        where code=#{code,jdbcType=VARCHAR} AND isActive=1
+    </update>
+
+    <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo" useGeneratedKeys="true"
+            keyProperty="id">
         insert into cityinfo
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -127,7 +128,8 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
+    <update id="updateByCodeSelective">
+
         update cityinfo
         <set>
             <if test="province != null">
@@ -167,22 +169,7 @@
                 ts = #{ts,jdbcType=BIGINT},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where code = #{code,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
-    update cityinfo
-    set province = #{province,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
-      code = #{code,jdbcType=VARCHAR},
-      cnty = #{cnty,jdbcType=VARCHAR},
-      districtEn = #{districtEn,jdbcType=VARCHAR},
-      districtZh = #{districtZh,jdbcType=VARCHAR},
-      lon = #{lon,jdbcType=VARCHAR},
-      lat = #{lat,jdbcType=VARCHAR},
-      createTime = #{createTime,jdbcType=TIMESTAMP},
-      lastUpdateTime = #{lastupdateTime,jdbcType=TIMESTAMP},
-      isActive = #{isActive,jdbcType=BIT},
-      ts = #{ts,jdbcType=BIGINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

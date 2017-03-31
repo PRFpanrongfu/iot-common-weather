@@ -1,6 +1,6 @@
 package com.iemylife.iot.weather.domain.po;
 
-public class LifeSuggestion {
+public class LifeSuggestionInfo {
     private Integer id;
 
     private String city;

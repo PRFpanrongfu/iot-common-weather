@@ -3,6 +3,7 @@ package com.iemylife.iot.weather.service.impl;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.mapper.CityInfoMapper;
 import com.iemylife.iot.weather.service.ICityInfoService;
+import com.iemylife.iot.weather.util.ServiceUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,22 @@ import java.util.List;
 public class CityInfoServiceImpl implements ICityInfoService {
     @Autowired
     private CityInfoMapper cityInfoMapper;
+
+    @Override
+
+
+    public int insertBatch(String city, String code) {
+        if (city == null || city.trim().length() == 0 || city.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        if (code == null || code.trim().length() == 0 || code.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        CityInfo cityInfo = cityInfoMapper.selectByCode(code);
+        if (cityInfo != null)
+            System.out.println("已存在,不需要更新");
+        return cityInfoMapper.insertBatch(city, code);
+    }
 
     @Override
     public List<CityInfo> selectBymodelIdAndPage(@Param("code") String code, @Param("size") Integer size, @Param("page") Integer page) {
@@ -80,8 +97,8 @@ public class CityInfoServiceImpl implements ICityInfoService {
         cityInfo.setLat(record.getLat());
         //isActive对应数据库字段类型为bit,true=1=激活,false=0=未激活(删除)
         cityInfo.setIsActive(true);
-        cityInfo.setCreateTime(currentDate);
-        cityInfo.setLastupdateTime(currentDate);
+        cityInfo.setCreateTime(ServiceUtils.getTenNumbersTimeStamp(currentDate));
+        cityInfo.setLastupdateTime(ServiceUtils.getTenNumbersTimeStamp(currentDate));
         cityInfo.setTs(currentDate.getTime());
 
         return cityInfoMapper.insertSelective(cityInfo);

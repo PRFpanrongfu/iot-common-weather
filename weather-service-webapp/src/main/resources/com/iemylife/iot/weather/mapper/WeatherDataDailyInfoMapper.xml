@@ -6,6 +6,7 @@
         <result column="city" property="city" jdbcType="VARCHAR"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
         <result column="condDayCode" property="condDayCode" jdbcType="VARCHAR"/>
+        <result column="condDayTxt" property="condDayTxt" jdbcType="VARCHAR"/>
         <result column="condNightCode" property="condNightCode" jdbcType="VARCHAR"/>
         <result column="condNightTxt" property="condNightTxt" jdbcType="VARCHAR"/>
         <result column="feel" property="feel" jdbcType="VARCHAR"/>
@@ -27,8 +28,8 @@
         <result column="ts" property="ts" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, city, code, condDayCode, condNightCode, condNightTxt, feel, humidity, pcpn, pres, 
-    temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData, 
+        id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,
+        temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData,
     weatherProvider, reportDate, createTime, isActive, ts
   </sql>
     <select id="selectByCode" resultMap="BaseResultMap"
@@ -38,7 +39,7 @@
         from weatherdatadailyinfo
         where code = #{code,jdbcType=VARCHAR}
     </select>
-    <select id="selectByCity" resultMap="BaseResultMap"
+    <select id="selectByCity" resultType="BaseResultMap"
             parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
@@ -46,4 +47,20 @@
         where city = #{city,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectByCodeAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM weatherdatadailyinfo
+        WHERE code=#{code,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}
+
+    </select>
+    <select id="selectByCityAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM weatherdatadailyinfo
+        WHERE city=#{city,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}
+
+    </select>
 </mapper>

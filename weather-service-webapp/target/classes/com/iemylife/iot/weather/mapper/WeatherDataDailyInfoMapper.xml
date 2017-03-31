@@ -1,305 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.iemylife.iot.weather.mapper.WeatherDataDailyInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="condDayCode" property="condDayCode" jdbcType="VARCHAR" />
-    <result column="condNightCode" property="condNightCode" jdbcType="VARCHAR" />
-    <result column="condNightTxt" property="condNightTxt" jdbcType="VARCHAR" />
-    <result column="feel" property="feel" jdbcType="VARCHAR" />
-    <result column="humidity" property="humidity" jdbcType="VARCHAR" />
-    <result column="pcpn" property="pcpn" jdbcType="VARCHAR" />
-    <result column="pres" property="pres" jdbcType="VARCHAR" />
-    <result column="temperatureMax" property="temperatureMax" jdbcType="VARCHAR" />
-    <result column="temperatureMin" property="temperatureMin" jdbcType="VARCHAR" />
-    <result column="visibility" property="visibility" jdbcType="VARCHAR" />
-    <result column="winDeg" property="winDeg" jdbcType="VARCHAR" />
-    <result column="windDir" property="windDir" jdbcType="VARCHAR" />
-    <result column="windSc" property="windSc" jdbcType="VARCHAR" />
-    <result column="windSpd" property="windSpd" jdbcType="VARCHAR" />
-    <result column="extendData" property="extendData" jdbcType="VARCHAR" />
-    <result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR" />
-    <result column="reportDate" property="reportDate" jdbcType="VARCHAR" />
-    <result column="createTime" property="createTime" jdbcType="BIGINT" />
-    <result column="isActive" property="isActive" jdbcType="BIT" />
-    <result column="ts" property="ts" jdbcType="BIGINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, city, code, condDayCode, condNightCode, condNightTxt, feel, humidity, pcpn, pres, 
-    temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData, 
-    weatherProvider, reportDate, createTime, isActive, ts
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from weatherdatadailyinfo
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from weatherdatadailyinfo
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo" >
-    insert into weatherdatadailyinfo (id, city, code, 
-      condDayCode, condNightCode, condNightTxt, 
-      feel, humidity, pcpn, 
-      pres, temperatureMax, temperatureMin, 
-      visibility, winDeg, windDir, 
-      windSc, windSpd, extendData, 
-      weatherProvider, reportDate, createTime, 
-      isActive, ts)
-    values (#{id,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{condDayCode,jdbcType=VARCHAR}, #{condNightCode,jdbcType=VARCHAR}, #{condNightTxt,jdbcType=VARCHAR},
-      #{feel,jdbcType=VARCHAR}, #{humidity,jdbcType=VARCHAR}, #{pcpn,jdbcType=VARCHAR}, 
-      #{pres,jdbcType=VARCHAR}, #{temperatureMax,jdbcType=VARCHAR}, #{temperatureMin,jdbcType=VARCHAR},
-      #{visibility,jdbcType=VARCHAR}, #{winDeg,jdbcType=VARCHAR}, #{windDir,jdbcType=VARCHAR},
-      #{windSc,jdbcType=VARCHAR}, #{windSpd,jdbcType=VARCHAR}, #{extendData,jdbcType=VARCHAR},
-      #{weatherProvider,jdbcType=VARCHAR}, #{reportDate,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},
-      #{isActive,jdbcType=BIT}, #{ts,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo" >
-    insert into weatherdatadailyinfo
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="code != null" >
-        code,
-      </if>
-      <if test="condDayCode != null" >
-        condDayCode,
-      </if>
-      <if test="condNightCode != null" >
-        condNightCode,
-      </if>
-      <if test="condNightTxt != null" >
-        condNightTxt,
-      </if>
-      <if test="feel != null" >
-        feel,
-      </if>
-      <if test="humidity != null" >
-        humidity,
-      </if>
-      <if test="pcpn != null" >
-        pcpn,
-      </if>
-      <if test="pres != null" >
-        pres,
-      </if>
-      <if test="temperatureMax != null" >
-        temperatureMax,
-      </if>
-      <if test="temperatureMin != null" >
-        temperatureMin,
-      </if>
-      <if test="visibility != null" >
-        visibility,
-      </if>
-      <if test="winDeg != null" >
-        winDeg,
-      </if>
-      <if test="windDir != null" >
-        windDir,
-      </if>
-      <if test="windSc != null" >
-        windSc,
-      </if>
-      <if test="windSpd != null" >
-        windSpd,
-      </if>
-      <if test="extendData != null" >
-        extendData,
-      </if>
-      <if test="weatherProvider != null" >
-        weatherProvider,
-      </if>
-      <if test="reportDate != null" >
-        reportDate,
-      </if>
-      <if test="createTime != null" >
-        createTime,
-      </if>
-      <if test="isActive != null" >
-        isActive,
-      </if>
-      <if test="ts != null" >
-        ts,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="condDayCode != null" >
-        #{condDayCode,jdbcType=VARCHAR},
-      </if>
-      <if test="condNightCode != null" >
-        #{condNightCode,jdbcType=VARCHAR},
-      </if>
-      <if test="condNightTxt != null" >
-        #{condNightTxt,jdbcType=VARCHAR},
-      </if>
-      <if test="feel != null" >
-        #{feel,jdbcType=VARCHAR},
-      </if>
-      <if test="humidity != null" >
-        #{humidity,jdbcType=VARCHAR},
-      </if>
-      <if test="pcpn != null" >
-        #{pcpn,jdbcType=VARCHAR},
-      </if>
-      <if test="pres != null" >
-        #{pres,jdbcType=VARCHAR},
-      </if>
-      <if test="temperatureMax != null" >
-        #{temperatureMax,jdbcType=VARCHAR},
-      </if>
-      <if test="temperatureMin != null" >
-        #{temperatureMin,jdbcType=VARCHAR},
-      </if>
-      <if test="visibility != null" >
-        #{visibility,jdbcType=VARCHAR},
-      </if>
-      <if test="winDeg != null" >
-        #{winDeg,jdbcType=VARCHAR},
-      </if>
-      <if test="windDir != null" >
-        #{windDir,jdbcType=VARCHAR},
-      </if>
-      <if test="windSc != null" >
-        #{windSc,jdbcType=VARCHAR},
-      </if>
-      <if test="windSpd != null" >
-        #{windSpd,jdbcType=VARCHAR},
-      </if>
-      <if test="extendData != null" >
-        #{extendData,jdbcType=VARCHAR},
-      </if>
-      <if test="weatherProvider != null" >
-        #{weatherProvider,jdbcType=VARCHAR},
-      </if>
-      <if test="reportDate != null" >
-        #{reportDate,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=BIGINT},
-      </if>
-      <if test="isActive != null" >
-        #{isActive,jdbcType=BIT},
-      </if>
-      <if test="ts != null" >
-        #{ts,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo" >
-    update weatherdatadailyinfo
-    <set >
-      <if test="city != null" >
-        city = #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="condDayCode != null" >
-        condDayCode = #{condDayCode,jdbcType=VARCHAR},
-      </if>
-      <if test="condNightCode != null" >
-        condNightCode = #{condNightCode,jdbcType=VARCHAR},
-      </if>
-      <if test="condNightTxt != null" >
-        condNightTxt = #{condNightTxt,jdbcType=VARCHAR},
-      </if>
-      <if test="feel != null" >
-        feel = #{feel,jdbcType=VARCHAR},
-      </if>
-      <if test="humidity != null" >
-        humidity = #{humidity,jdbcType=VARCHAR},
-      </if>
-      <if test="pcpn != null" >
-        pcpn = #{pcpn,jdbcType=VARCHAR},
-      </if>
-      <if test="pres != null" >
-        pres = #{pres,jdbcType=VARCHAR},
-      </if>
-      <if test="temperatureMax != null" >
-        temperatureMax = #{temperatureMax,jdbcType=VARCHAR},
-      </if>
-      <if test="temperatureMin != null" >
-        temperatureMin = #{temperatureMin,jdbcType=VARCHAR},
-      </if>
-      <if test="visibility != null" >
-        visibility = #{visibility,jdbcType=VARCHAR},
-      </if>
-      <if test="winDeg != null" >
-        winDeg = #{winDeg,jdbcType=VARCHAR},
-      </if>
-      <if test="windDir != null" >
-        windDir = #{windDir,jdbcType=VARCHAR},
-      </if>
-      <if test="windSc != null" >
-        windSc = #{windSc,jdbcType=VARCHAR},
-      </if>
-      <if test="windSpd != null" >
-        windSpd = #{windSpd,jdbcType=VARCHAR},
-      </if>
-      <if test="extendData != null" >
-        extendData = #{extendData,jdbcType=VARCHAR},
-      </if>
-      <if test="weatherProvider != null" >
-        weatherProvider = #{weatherProvider,jdbcType=VARCHAR},
-      </if>
-      <if test="reportDate != null" >
-        reportDate = #{reportDate,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        createTime = #{createTime,jdbcType=BIGINT},
-      </if>
-      <if test="isActive != null" >
-        isActive = #{isActive,jdbcType=BIT},
-      </if>
-      <if test="ts != null" >
-        ts = #{ts,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo" >
-    update weatherdatadailyinfo
-    set city = #{city,jdbcType=VARCHAR},
-      code = #{code,jdbcType=VARCHAR},
-      condDayCode = #{condDayCode,jdbcType=VARCHAR},
-      condNightCode = #{condNightCode,jdbcType=VARCHAR},
-      condNightTxt = #{condNightTxt,jdbcType=VARCHAR},
-      feel = #{feel,jdbcType=VARCHAR},
-      humidity = #{humidity,jdbcType=VARCHAR},
-      pcpn = #{pcpn,jdbcType=VARCHAR},
-      pres = #{pres,jdbcType=VARCHAR},
-      temperatureMax = #{temperatureMax,jdbcType=VARCHAR},
-      temperatureMin = #{temperatureMin,jdbcType=VARCHAR},
-      visibility = #{visibility,jdbcType=VARCHAR},
-      winDeg = #{winDeg,jdbcType=VARCHAR},
-      windDir = #{windDir,jdbcType=VARCHAR},
-      windSc = #{windSc,jdbcType=VARCHAR},
-      windSpd = #{windSpd,jdbcType=VARCHAR},
-      extendData = #{extendData,jdbcType=VARCHAR},
-      weatherProvider = #{weatherProvider,jdbcType=VARCHAR},
-      reportDate = #{reportDate,jdbcType=VARCHAR},
-      createTime = #{createTime,jdbcType=BIGINT},
-      isActive = #{isActive,jdbcType=BIT},
-      ts = #{ts,jdbcType=BIGINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+<mapper namespace="com.iemylife.iot.weather.mapper.WeatherDataDailyInfoMapper">
+    <!--<resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo">-->
+        <!--<id column="id" property="id" jdbcType="INTEGER"/>-->
+        <!--<result column="city" property="city" jdbcType="VARCHAR"/>-->
+        <!--<result column="code" property="code" jdbcType="VARCHAR"/>-->
+        <!--<result column="condDayCode" property="condDayCode" jdbcType="VARCHAR"/>-->
+        <!--<result column="condDayTxt" property="condDayTxt" jdbcType="VARCHAR"/>-->
+        <!--<result column="condNightCode" property="condNightCode" jdbcType="VARCHAR"/>-->
+        <!--<result column="condNightTxt" property="condNightTxt" jdbcType="VARCHAR"/>-->
+        <!--<result column="feel" property="feel" jdbcType="VARCHAR"/>-->
+        <!--<result column="humidity" property="humidity" jdbcType="VARCHAR"/>-->
+        <!--<result column="pcpn" property="pcpn" jdbcType="VARCHAR"/>-->
+        <!--<result column="pres" property="pres" jdbcType="VARCHAR"/>-->
+        <!--<result column="temperatureMax" property="temperatureMax" jdbcType="VARCHAR"/>-->
+        <!--<result column="temperatureMin" property="temperatureMin" jdbcType="VARCHAR"/>-->
+        <!--<result column="visibility" property="visibility" jdbcType="VARCHAR"/>-->
+        <!--<result column="winDeg" property="winDeg" jdbcType="VARCHAR"/>-->
+        <!--<result column="windDir" property="windDir" jdbcType="VARCHAR"/>-->
+        <!--<result column="windSc" property="windSc" jdbcType="VARCHAR"/>-->
+        <!--<result column="windSpd" property="windSpd" jdbcType="VARCHAR"/>-->
+        <!--<result column="extendData" property="extendData" jdbcType="VARCHAR"/>-->
+        <!--<result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR"/>-->
+        <!--<result column="reportDate" property="reportDate" jdbcType="VARCHAR"/>-->
+        <!--<result column="createTime" property="createTime" jdbcType="BIGINT"/>-->
+        <!--<result column="isActive" property="isActive" jdbcType="BIT"/>-->
+        <!--<result column="ts" property="ts" jdbcType="BIGINT"/>-->
+    <!--</resultMap>-->
+    <!--<sql id="Base_Column_List">-->
+    <!--id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,-->
+    <!--temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData, -->
+    <!--weatherProvider, reportDate, createTime, isActive, ts-->
+  <!--</sql>-->
+    <!--<select id="selectByCode" resultMap="BaseResultMap"-->
+            <!--parameterType="java.lang.String">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from weatherdatadailyinfo-->
+        <!--where code = #{code,jdbcType=VARCHAR}-->
+    <!--</select>-->
+    <!--<select id="selectByCity" resultType="BaseResultMap"-->
+            <!--parameterType="java.lang.String">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from weatherdatadailyinfo-->
+        <!--where city = #{city,jdbcType=VARCHAR}-->
+    <!--</select>-->
+
+    <!--<select id="selectByCodeAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"-->
+            <!--parameterType="java.lang.String">-->
+        <!--SELECT-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--FROM weatherdatadailyinfo-->
+        <!--WHERE code=#{code,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}-->
+
+    <!--</select>-->
+    <!--<select id="selectByCityAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"-->
+            <!--parameterType="java.lang.String">-->
+        <!--SELECT-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--FROM weatherdatadailyinfo-->
+        <!--WHERE city=#{city,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}-->
+
+    <!--</select>-->
 </mapper>

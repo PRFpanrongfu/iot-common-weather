@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface CityInfoMapper {
+    int insertBatch(String city, String code);
     List<CityInfo> selectByCodeAndPage(@Param("code") String code, @Param("size") Integer size, @Param("page") Integer page);
 
     int updateByCodeSelective(@Param("code") String code, @Param("cityInfo") CityInfo cityInfo);

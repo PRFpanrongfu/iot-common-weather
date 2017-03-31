@@ -20,6 +20,18 @@
     id, province, city, code, cnty, districtEn, districtZh, lon, lat, createTime, lastUpdateTime,
     isActive, ts
   </sql>
+    <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO cityinfo
+        <include refid="Base_Column_List"/>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{province},#{city},#{code},#{cnty},#{districtEn},#{districtZh},#{lon},#{lat})
+        </foreach>
+    </insert>
     <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.CityInfo" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
@@ -41,6 +53,7 @@
         ts=#{ts,jdbcType=BIGINT}
         where code=#{code,jdbcType=VARCHAR} AND isActive=1
     </update>
+
 
     <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo" useGeneratedKeys="true"
             keyProperty="id">

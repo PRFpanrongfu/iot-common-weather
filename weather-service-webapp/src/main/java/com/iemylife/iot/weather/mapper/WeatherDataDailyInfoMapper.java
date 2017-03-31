@@ -12,4 +12,8 @@ public interface WeatherDataDailyInfoMapper {
 
     List<WeatherDataDailyInfo> selectByCity(String city);
 
+    WeatherDataDailyInfo selectByCodeAndDate(String code, String date);
+
+    WeatherDataDailyInfo selectByCityAndDate(String city, String date);
+
 }

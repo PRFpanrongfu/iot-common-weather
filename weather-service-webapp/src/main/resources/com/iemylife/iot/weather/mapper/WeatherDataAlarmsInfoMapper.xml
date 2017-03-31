@@ -17,10 +17,7 @@
         <result column="isActive" property="isActive" jdbcType="BIT"/>
         <result column="ts" property="ts" jdbcType="BIGINT"/>
     </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="com.iemylife.iot.weather.domain.po.WeatherDataAlarmsInfo"
-               extends="BaseResultMap">
-        <result column="title" property="title" jdbcType="LONGVARCHAR"/>
-    </resultMap>
+
     <sql id="Base_Column_List">
     id, city, code, levelValue, levelText, state, content, type, extendData, weatherProvider, 
     reportDate, createTime, isActive, ts
