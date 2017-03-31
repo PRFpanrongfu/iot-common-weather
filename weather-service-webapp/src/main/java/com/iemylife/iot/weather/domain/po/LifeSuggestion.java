@@ -21,9 +21,9 @@ public class LifeSuggestion {
 
     private String reportDate;
 
-    private Long createtime;
+    private Long createTime;
 
-    private Boolean isactive;
+    private Boolean isActive;
 
     private Long ts;
 
@@ -107,20 +107,20 @@ public class LifeSuggestion {
         this.reportDate = reportDate == null ? null : reportDate.trim();
     }
 
-    public Long getCreatetime() {
-        return createtime;
+    public Long getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatetime(Long createtime) {
-        this.createtime = createtime;
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 
-    public Boolean getIsactive() {
-        return isactive;
+    public Boolean getIsActive() {
+        return isActive;
     }
 
-    public void setIsactive(Boolean isactive) {
-        this.isactive = isactive;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public Long getTs() {

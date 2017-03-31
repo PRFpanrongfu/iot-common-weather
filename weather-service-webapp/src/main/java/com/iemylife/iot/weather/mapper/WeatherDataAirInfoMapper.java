@@ -5,15 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface WeatherDataAirInfoMapper {
-    int deleteByPrimaryKey(Integer id);
+    WeatherDataAirInfo selectByCode(String code);
 
-    int insert(WeatherDataAirInfo record);
-
-    int insertSelective(WeatherDataAirInfo record);
-
-    WeatherDataAirInfo selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(WeatherDataAirInfo record);
-
-    int updateByPrimaryKey(WeatherDataAirInfo record);
+    WeatherDataAirInfo selectByCity(String city);
 }

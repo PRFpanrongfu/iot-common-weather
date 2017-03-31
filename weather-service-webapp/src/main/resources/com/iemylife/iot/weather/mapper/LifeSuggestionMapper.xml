@@ -1,188 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.iemylife.iot.weather.mapper.LifeSuggestionMapper" >
-  <resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.LifeSuggestion" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="typeCode" property="typeCode" jdbcType="VARCHAR" />
-    <result column="typeName" property="typeName" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="extendData" property="extendData" jdbcType="VARCHAR" />
-    <result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR" />
-    <result column="reportDate" property="reportDate" jdbcType="VARCHAR" />
-    <result column="createTime" property="createTime" jdbcType="BIGINT" />
-    <result column="isActive" property="isActive" jdbcType="BIT" />
-    <result column="ts" property="ts" jdbcType="BIGINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.iemylife.iot.weather.mapper.LifeSuggestionMapper">
+    <resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.LifeSuggestion">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="typeCode" property="typeCode" jdbcType="VARCHAR"/>
+        <result column="typeName" property="typeName" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="extendData" property="extendData" jdbcType="VARCHAR"/>
+        <result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR"/>
+        <result column="reportDate" property="reportDate" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="BIGINT"/>
+        <result column="isActive" property="isActive" jdbcType="BIT"/>
+        <result column="ts" property="ts" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, city, code, typeCode, typeName, remark, description, extendData, weatherProvider,
     reportDate, createTime, isActive, ts
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from lifesuggestion
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from lifesuggestion
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.iemylife.iot.weather.domain.po.LifeSuggestion" >
-    insert into lifesuggestion (id, city, code, 
-      typeCode, typeName, remark,
-      description, extendData, weatherProvider, 
-      reportDate, createTime, isActive, 
-      ts)
-    values (#{id,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{typeCode,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
-      #{description,jdbcType=VARCHAR}, #{extendData,jdbcType=VARCHAR}, #{weatherProvider,jdbcType=VARCHAR},
-      #{reportDate,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{isActive,jdbcType=BIT},
-      #{ts,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.LifeSuggestion" >
-    insert into lifesuggestion
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="code != null" >
-        code,
-      </if>
-      <if test="typeCode != null" >
-        typeCode,
-      </if>
-      <if test="typeName != null" >
-        typeName,
-      </if>
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="description != null" >
-        description,
-      </if>
-      <if test="extendData != null" >
-        extendData,
-      </if>
-      <if test="weatherProvider != null" >
-        weatherProvider,
-      </if>
-      <if test="reportDate != null" >
-        reportDate,
-      </if>
-      <if test="createTime != null" >
-        createTime,
-      </if>
-      <if test="isActive != null" >
-        isActive,
-      </if>
-      <if test="ts != null" >
-        ts,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="typeCode != null" >
-        #{typeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="typeName != null" >
-        #{typeName,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="extendData != null" >
-        #{extendData,jdbcType=VARCHAR},
-      </if>
-      <if test="weatherProvider != null" >
-        #{weatherProvider,jdbcType=VARCHAR},
-      </if>
-      <if test="reportDate != null" >
-        #{reportDate,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=BIGINT},
-      </if>
-      <if test="isActive != null" >
-        #{isActive,jdbcType=BIT},
-      </if>
-      <if test="ts != null" >
-        #{ts,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.iemylife.iot.weather.domain.po.LifeSuggestion" >
-    update lifesuggestion
-    <set >
-      <if test="city != null" >
-        city = #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="typeCode != null" >
-        typeCode = #{typeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="typeName != null" >
-        typeName = #{typeName,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="extendData != null" >
-        extendData = #{extendData,jdbcType=VARCHAR},
-      </if>
-      <if test="weatherProvider != null" >
-        weatherProvider = #{weatherProvider,jdbcType=VARCHAR},
-      </if>
-      <if test="reportDate != null" >
-        reportDate = #{reportDate,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        createTime = #{createTime,jdbcType=BIGINT},
-      </if>
-      <if test="isActive != null" >
-        isActive = #{isActive,jdbcType=BIT},
-      </if>
-      <if test="ts != null" >
-        ts = #{ts,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.iemylife.iot.weather.domain.po.LifeSuggestion" >
-    update lifesuggestion
-    set city = #{city,jdbcType=VARCHAR},
-      code = #{code,jdbcType=VARCHAR},
-      typeCode = #{typeCode,jdbcType=VARCHAR},
-      typeName = #{typeName,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      extendData = #{extendData,jdbcType=VARCHAR},
-      weatherProvider = #{weatherProvider,jdbcType=VARCHAR},
-      reportDate = #{reportDate,jdbcType=VARCHAR},
-      createTime = #{createTime,jdbcType=BIGINT},
-      isActive = #{isActive,jdbcType=BIT},
-      ts = #{ts,jdbcType=BIGINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.WeatherDataAlarmsInfo"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from weatherdataalarmsinfo
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByCity" resultType="com.iemylife.iot.weather.domain.po.WeatherDataAirInfo"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM weatherdataalarmsinfo
+        WHERE city=#{city,jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -1,6 +1,6 @@
 package com.iemylife.iot.weather.domain.po;
 
-public class WeatherDataAlarms {
+public class WeatherDataAlarmsInfo {
     private Integer id;
 
     private String city;
