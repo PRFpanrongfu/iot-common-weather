@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Created by prf on 2017/3/29.
+ * Created by prf on 2017/3/30.
  */
 @SpringBootApplication
-public class RunApplication {
+public class RunApplcation {
     public static void main(String[] args) {
-        SpringApplication.run(RunApplication.class);
+        SpringApplication.run(RunApplcation.class);
     }
 }

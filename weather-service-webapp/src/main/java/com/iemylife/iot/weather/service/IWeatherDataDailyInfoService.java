@@ -2,17 +2,14 @@ package com.iemylife.iot.weather.service;
 
 import com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo;
 
+import java.util.List;
+
 
 public interface IWeatherDataDailyInfoService {
-    int deleteByPrimaryKey(Integer id);
+    List<WeatherDataDailyInfo> selectByCode(String code);
 
-    int insert(WeatherDataDailyInfo record);
+    List<WeatherDataDailyInfo> selectByCity(String city);
 
-    int insertSelective(WeatherDataDailyInfo record);
 
-    WeatherDataDailyInfo selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(WeatherDataDailyInfo record);
-
-    int updateByPrimaryKey(WeatherDataDailyInfo record);
 }

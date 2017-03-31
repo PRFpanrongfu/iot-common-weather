@@ -3,18 +3,13 @@ package com.iemylife.iot.weather.mapper;
 import com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 
 public interface WeatherDataDailyInfoMapper {
-    int deleteByPrimaryKey(Integer id);
+    List<WeatherDataDailyInfo> selectByCode(String code);
 
-    int insert(WeatherDataDailyInfo record);
+    List<WeatherDataDailyInfo> selectByCity(String city);
 
-    int insertSelective(WeatherDataDailyInfo record);
-
-    WeatherDataDailyInfo selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(WeatherDataDailyInfo record);
-
-    int updateByPrimaryKey(WeatherDataDailyInfo record);
 }

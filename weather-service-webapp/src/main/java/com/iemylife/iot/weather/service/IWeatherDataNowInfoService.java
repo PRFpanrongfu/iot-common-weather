@@ -4,15 +4,7 @@ import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
 
 
 public interface IWeatherDataNowInfoService {
-    int deleteByPrimaryKey(Integer id);
+    WeatherDataNowInfo selectByCode(String code);
 
-    int insert(WeatherDataNowInfo record);
-
-    int insertSelective(WeatherDataNowInfo record);
-
-    WeatherDataNowInfo selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(WeatherDataNowInfo record);
-
-    int updateByPrimaryKey(WeatherDataNowInfo record);
+    WeatherDataNowInfo selectByCity(String city);
 }

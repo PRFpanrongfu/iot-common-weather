@@ -2,18 +2,21 @@ package com.iemylife.iot.weather.mapper;
 
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface CityInfoMapper {
-    int deleteByPrimaryKey(Integer id);
+    List<CityInfo> selectByCodeAndPage(@Param("code") String code, @Param("size") Integer size, @Param("page") Integer page);
 
-    int insert(CityInfo record);
+    int updateByCodeSelective(@Param("code") String code, @Param("cityInfo") CityInfo cityInfo);
+
+    int deleteByCode(String code);
+
+    CityInfo selectByCode(String code);
 
     int insertSelective(CityInfo record);
 
-    CityInfo selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(CityInfo record);
-
-    int updateByPrimaryKey(CityInfo record);
 }

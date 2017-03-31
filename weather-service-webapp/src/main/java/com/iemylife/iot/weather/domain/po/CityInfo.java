@@ -1,5 +1,7 @@
 package com.iemylife.iot.weather.domain.po;
 
+import com.iemylife.iot.weather.domain.vo.CityInfoReturnValue;
+
 import java.util.Date;
 
 public class CityInfo {
@@ -21,13 +23,26 @@ public class CityInfo {
 
     private String lat;
 
-    private Date createTime;
+    private Long createTime;
 
-    private Date lastupdateTime;
+    private Long lastupdateTime;
 
     private Boolean isActive;
 
     private Long ts;
+
+    public CityInfoReturnValue getCityInfoReturnValue() {
+        CityInfoReturnValue cityInfoReturnValue = new CityInfoReturnValue();
+        cityInfoReturnValue.setProvince(this.province);
+        cityInfoReturnValue.setCity(this.city);
+        cityInfoReturnValue.setCode(this.code);
+        cityInfoReturnValue.setCnty(this.cnty);
+        cityInfoReturnValue.setDistrictEn(this.districtEn);
+        cityInfoReturnValue.setDistrictZh(this.districtZh);
+        cityInfoReturnValue.setLon(this.lon);
+        cityInfoReturnValue.setLat(this.lat);
+        return cityInfoReturnValue;
+    }
 
     public Integer getId() {
         return id;
@@ -101,19 +116,19 @@ public class CityInfo {
         this.lat = lat == null ? null : lat.trim();
     }
 
-    public Date getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public Date getLastupdateTime() {
+    public Long getLastupdateTime() {
         return lastupdateTime;
     }
 
-    public void setLastupdateTime(Date lastupdateTime) {
+    public void setLastupdateTime(Long lastupdateTime) {
         this.lastupdateTime = lastupdateTime;
     }
 

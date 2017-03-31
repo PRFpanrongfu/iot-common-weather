@@ -1,39 +1,26 @@
 package com.iemylife.iot.weather.service.impl;
 
 import com.iemylife.iot.weather.domain.po.WeatherDataAirInfo;
+import com.iemylife.iot.weather.mapper.WeatherDataAirInfoMapper;
 import com.iemylife.iot.weather.service.IWeatherDataAirInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by prf on 2017/3/29.
  */
-public class WeatherDataAirInfoServiceImpl implements IWeatherDataAirInfoService{
+@Service
+public class WeatherDataAirInfoServiceImpl implements IWeatherDataAirInfoService {
+    @Autowired
+    private WeatherDataAirInfoMapper weatherDataAirInfoMapper;
+
     @Override
-    public int deleteByPrimaryKey(Integer id) {
-        return 0;
+    public WeatherDataAirInfo selectByCode(String code) {
+        return weatherDataAirInfoMapper.selectByCode(code);
     }
 
     @Override
-    public int insert(WeatherDataAirInfo record) {
-        return 0;
-    }
-
-    @Override
-    public int insertSelective(WeatherDataAirInfo record) {
-        return 0;
-    }
-
-    @Override
-    public WeatherDataAirInfo selectByPrimaryKey(Integer id) {
-        return null;
-    }
-
-    @Override
-    public int updateByPrimaryKeySelective(WeatherDataAirInfo record) {
-        return 0;
-    }
-
-    @Override
-    public int updateByPrimaryKey(WeatherDataAirInfo record) {
-        return 0;
+    public WeatherDataAirInfo selectByCity(String city) {
+        return weatherDataAirInfoMapper.selectByCity(city);
     }
 }
