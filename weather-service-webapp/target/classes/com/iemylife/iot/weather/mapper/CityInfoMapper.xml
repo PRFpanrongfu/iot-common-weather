@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iemylife.iot.weather.mapper.CityInfoMapper">
+    <resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.CityInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="cnty" property="cnty" jdbcType="VARCHAR"/>
+        <result column="districtEn" property="districtEn" jdbcType="VARCHAR"/>
+        <result column="districtZh" property="districtZh" jdbcType="VARCHAR"/>
+        <result column="lon" property="lon" jdbcType="VARCHAR"/>
+        <result column="lat" property="lat" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdateTime" property="lastupdateTime" jdbcType="TIMESTAMP"/>
+        <result column="isActive" property="isActive" jdbcType="BIT"/>
+        <result column="ts" property="ts" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, province, city, code, cnty, districtEn, districtZh, lon, lat, createTime, lastUpdateTime,
+    isActive, ts
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from cityinfo
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cityinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
+    insert into cityinfo (id, province, city, 
+      code, cnty, districtEn,
+      districtZh, lon, lat, 
+      createTime, lastUpdateTime, isActive, 
+      ts)
+    values (#{id,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{cnty,jdbcType=VARCHAR}, #{districtEn,jdbcType=VARCHAR},
+      #{districtZh,jdbcType=VARCHAR}, #{lon,jdbcType=VARCHAR}, #{lat,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{lastupdateTime,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT},
+      #{ts,jdbcType=BIGINT})
+  </insert>
+    <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into cityinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="cnty != null">
+                cnty,
+            </if>
+            <if test="districtEn != null">
+                districtEn,
+            </if>
+            <if test="districtZh != null">
+                districtZh,
+            </if>
+            <if test="lon != null">
+                lon,
+            </if>
+            <if test="lat != null">
+                lat,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastupdateTime != null">
+                lastUpdateTime,
+            </if>
+            <if test="isActive != null">
+                isActive,
+            </if>
+            <if test="ts != null">
+                ts,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="cnty != null">
+                #{cnty,jdbcType=VARCHAR},
+            </if>
+            <if test="districtEn != null">
+                #{districtEn,jdbcType=VARCHAR},
+            </if>
+            <if test="districtZh != null">
+                #{districtZh,jdbcType=VARCHAR},
+            </if>
+            <if test="lon != null">
+                #{lon,jdbcType=VARCHAR},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdateTime != null">
+                #{lastupdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=BIT},
+            </if>
+            <if test="ts != null">
+                #{ts,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
+        update cityinfo
+        <set>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="cnty != null">
+                cnty = #{cnty,jdbcType=VARCHAR},
+            </if>
+            <if test="districtEn != null">
+                districtEn = #{districtEn,jdbcType=VARCHAR},
+            </if>
+            <if test="districtZh != null">
+                districtZh = #{districtZh,jdbcType=VARCHAR},
+            </if>
+            <if test="lon != null">
+                lon = #{lon,jdbcType=VARCHAR},
+            </if>
+            <if test="lat != null">
+                lat = #{lat,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdateTime != null">
+                lastUpdateTime = #{lastupdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isActive != null">
+                isActive = #{isActive,jdbcType=BIT},
+            </if>
+            <if test="ts != null">
+                ts = #{ts,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.iemylife.iot.weather.domain.po.CityInfo">
+    update cityinfo
+    set province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      cnty = #{cnty,jdbcType=VARCHAR},
+      districtEn = #{districtEn,jdbcType=VARCHAR},
+      districtZh = #{districtZh,jdbcType=VARCHAR},
+      lon = #{lon,jdbcType=VARCHAR},
+      lat = #{lat,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      lastUpdateTime = #{lastupdateTime,jdbcType=TIMESTAMP},
+      isActive = #{isActive,jdbcType=BIT},
+      ts = #{ts,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
