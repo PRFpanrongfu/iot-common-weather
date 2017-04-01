@@ -1,5 +1,7 @@
 package com.iemylife.iot.weather.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
 import com.iemylife.iot.weather.service.impl.WeatherDataNowInfoServiceImpl;
@@ -11,6 +13,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,10 @@ import java.util.Map;
 @RestController
 public class WeatherDataNowInfoController extends BaseController {
     private static final String EMPTY_RESPONSEBODY_VALUE = "{}";
+    private RestTemplate restTemplate = new RestTemplate();
+    private String baseURL = "https://free-api.heweather.com/v5/";//接口地址
+    private String key = "&key=41f448ef42e54a36a892838fa98d71da";//接口key
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private WeatherDataNowInfoServiceImpl weatherDataNowInfoService;
 
@@ -43,7 +50,38 @@ public class WeatherDataNowInfoController extends BaseController {
     @GetMapping(value = "/weathers/now", params = {"code"})
     public ResponseEntity<?> searchByCode(@RequestParam String code) {
         try {
-            WeatherDataNowInfo weatherDataNowInfo = weatherDataNowInfoService.selectByCode(code);
+            String url = baseURL + "now" + code + key;
+            String jsonString = restTemplate.getForObject(url, String.class);
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            WeatherDataNowInfo weatherDataNowInfo = new WeatherDataNowInfo();
+            JsonNode weatherNode = rootNode.get("HeWeather5");
+            JsonNode firstNode = weatherNode.get(1);
+            JsonNode basicNode = firstNode.get("basic");
+
+            //Map<String,User> result = mapper.readValue(src, new TypeReference<Map<String,User>>() { });
+            //获取city
+            String cityString = basicNode.get("city").asText();
+            //获取code
+            String codeString = basicNode.get("id").asText();
+            JsonNode nowNode = firstNode.get("now");
+
+            JsonNode condNode = nowNode.get("cond");
+            //获取condCode
+            String condcode = condNode.get("code").asText();
+            //获取condTxt
+            String condTxt = condNode.get("txt").asText();
+            //获取feel
+            String feelString = firstNode.get("f1").asText();
+            //获取humidity
+            String humidity = firstNode.get("hum").asText();
+            //获取pcpn
+            String pcpnString = firstNode.get("pcpn").asText();
+            //获取pres
+            String presString = firstNode.get("pres").asText();
+            //....
+
+
+            weatherDataNowInfoService.selectByCode(code, weatherDataNowInfo);
 
             if (weatherDataNowInfo == null) {
                 return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);

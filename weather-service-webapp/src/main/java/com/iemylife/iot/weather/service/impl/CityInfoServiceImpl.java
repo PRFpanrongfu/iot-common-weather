@@ -1,6 +1,8 @@
 package com.iemylife.iot.weather.service.impl;
 
+import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
+import com.iemylife.iot.weather.domain.vo.RemanentCityInfo;
 import com.iemylife.iot.weather.mapper.CityInfoMapper;
 import com.iemylife.iot.weather.service.ICityInfoService;
 import com.iemylife.iot.weather.util.ServiceUtils;
@@ -8,8 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by prf on 2017/3/29.
@@ -19,20 +20,59 @@ public class CityInfoServiceImpl implements ICityInfoService {
     @Autowired
     private CityInfoMapper cityInfoMapper;
 
+    /**
+     * 更新剩余字段
+     * 此方法可用做插入,数据库里已存在全国城市的信息,insert语句没有太大意义
+     * 插入一条记录可看做激活一条记录(置isActive=1),同时插入createTime lastUpdateTime ts
+     * 修改一条记录等价于
+     * 删除一条记录等价于,传入isActive参数为0
+     *
+     * @param code
+     * @param remanentCityInfo
+     * @return
+     */
+    @Override
+    public int updateRemanentField(String code, RemanentCityInfo remanentCityInfo) {
+        return cityInfoMapper.updateRemanentField(code, remanentCityInfo);
+    }
+
+    @Override
+    public int truncateCityInfo() {
+        return cityInfoMapper.truncateCityInfo();
+    }
+
     @Override
 
 
-    public int insertBatch(String city, String code) {
-        if (city == null || city.trim().length() == 0 || city.trim().length() > 100) {
-            throw new IllegalArgumentException("参数错误");
+    public int insertBatch(List<CityInfo> cityInfoList) throws TruncateTableException {
+        //CityInfo info = new CityInfo();
+        //for (CityInfo cityinfo : cityInfoList) {
+        //    //info = cityinfo;
+        //    String code = cityinfo.getCode();
+        //    if (!(cityInfoMapper.selectByCode(code) == null)) {
+        //        throw new IllegalArgumentException("已存在不需要更新");
+        //    }
+        //}
+        //验证数据库中一条记录是否对应cityInfoList中的一个CityInfo对象
+        //若存在,将cityInfoList中的此对象删除,再进行批量插入
+        //List<String> codeList = new ArrayList<>();
+        //for (int i = 1; i < cityInfoList.size(); i++) {
+        //    CityInfo cityInfo = cityInfoList.get(i);
+        //    codeList.set(i, cityInfo.getCode());
+        //    String code = codeList.get(i);
+        //    CityInfo cityInfo1 = cityInfoMapper.selectByCode(code);
+        //    if (cityInfo1 != null) {
+        //        cityInfoList.remove(i);
+        //    }
+        //    cityInfoMapper.insertBatch(cityInfoList);
+        //
+        //}
+
+        //整体删除在批量插入,确保数据最新
+        if (cityInfoMapper.truncateCityInfo() < 1) {
+            throw new TruncateTableException("删除数据数据失败");
         }
-        if (code == null || code.trim().length() == 0 || code.trim().length() > 100) {
-            throw new IllegalArgumentException("参数错误");
-        }
-        CityInfo cityInfo = cityInfoMapper.selectByCode(code);
-        if (cityInfo != null)
-            System.out.println("已存在,不需要更新");
-        return cityInfoMapper.insertBatch(city, code);
+        return cityInfoMapper.insertBatch(cityInfoList);
     }
 
     @Override

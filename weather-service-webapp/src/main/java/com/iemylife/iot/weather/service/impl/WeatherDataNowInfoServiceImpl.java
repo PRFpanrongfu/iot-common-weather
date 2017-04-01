@@ -15,8 +15,16 @@ public class WeatherDataNowInfoServiceImpl implements IWeatherDataNowInfoService
     @Autowired
     private WeatherDataNowInfoMapper weatherDataNowInfoMapper;
 
+    /**
+     * 查询数据源有三:
+     * 首先从redis查询,查询不到,则查询数据库,查询不到,最后调用api,返回
+     * 调用api的数据各放置一份到redis和数据库
+     *
+     * @param code
+     * @return
+     */
     @Override
-    public WeatherDataNowInfo selectByCode(String code) {
+    public WeatherDataNowInfo selectByCode(String code, WeatherDataNowInfo weatherDataNowInfo) {
         if (code.trim().length() == 0 || code.trim().length() > 100) {
             throw new IllegalArgumentException("参数错误");
         }

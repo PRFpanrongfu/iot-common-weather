@@ -3,9 +3,12 @@ package com.iemylife.iot.weather.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
+import com.iemylife.iot.weather.domain.vo.CityInfoForJson;
 import com.iemylife.iot.weather.domain.vo.CityInfoReturnValue;
 import com.iemylife.iot.weather.service.impl.CityInfoServiceImpl;
+import com.sun.deploy.trace.SocketTraceListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -124,17 +127,26 @@ public class CityInfoController extends BaseController {
     @GetMapping("citys/refresh")
     public void reshCityInfos() throws IOException {
 
-        RestTemplate restTemplate = new RestTemplate();
-        String returnValue = restTemplate.getForObject("https://cdn.heweather.com/china-city-list.json", String.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);  //只对实体起作用，对map不起作用
-        CityInfoReturnValue cityInfoReturnValue = new CityInfoReturnValue();
-        JsonNode rootNode = objectMapper.readTree(returnValue);
-        for (int i = 1; i < 3200; i++) {
-            cityInfoReturnValue.setCity(rootNode.get(i).asText());
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String returnValue = restTemplate.getForObject("https://cdn.heweather.com/china-city-list.json", String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);  //只对实体起作用，对map不起作用
+            List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, List.class);
+
+            List<CityInfo> cityInfoList = new ArrayList<>();
+            for (CityInfoForJson info : listCity) {
+                cityInfoList.add(info.getCityInfo());
+            }
+            cityInfoService.insertBatch(cityInfoList);
+        } catch (TruncateTableException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        System.out.println(returnValue);
-        //List<bean> list=objectMapper.readv
+
+
     }
 
 }
