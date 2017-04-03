@@ -27,7 +27,7 @@ public class CityInfoServiceImpl implements ICityInfoService {
      * 修改一条记录等价于
      * 删除一条记录等价于,传入isActive参数为0
      *
-     * @param code
+     * @param code 城市代码
      * @param remanentCityInfo
      * @return
      */
@@ -82,6 +82,7 @@ public class CityInfoServiceImpl implements ICityInfoService {
 
     @Override
     public int updateByCodeSelective(String code, CityInfo cityInfo) {
+        //首先判断空指针
         if (code == null || code.trim().length() == 0 || code.trim().length() > 100) {
             throw new IllegalArgumentException("参数错误");
         }

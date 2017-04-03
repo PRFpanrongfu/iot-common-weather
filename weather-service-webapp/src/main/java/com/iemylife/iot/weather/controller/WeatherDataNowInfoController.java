@@ -2,11 +2,15 @@ package com.iemylife.iot.weather.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemylife.iot.weather.domain.exception.GetDataFromApiException;
+import com.iemylife.iot.weather.domain.exception.SuchDataExistsException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
+import com.iemylife.iot.weather.domain.vo.WeatherDataNowInfoForJson;
 import com.iemylife.iot.weather.service.impl.WeatherDataNowInfoServiceImpl;
 import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -24,15 +28,13 @@ import java.util.Map;
  */
 @RestController
 public class WeatherDataNowInfoController extends BaseController {
-    private static final String EMPTY_RESPONSEBODY_VALUE = "{}";
-    private RestTemplate restTemplate = new RestTemplate();
-    private String baseURL = "https://free-api.heweather.com/v5/";//接口地址
-    private String key = "&key=41f448ef42e54a36a892838fa98d71da";//接口key
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private RedisTemplate<String, WeatherDataNowInfoForJson> redisTemplate;
     @Autowired
     private WeatherDataNowInfoServiceImpl weatherDataNowInfoService;
 
-    public static Map getModelResponseMap(WeatherDataNowInfo weatherDataNowInfo) {
+    public static Map getModelResponseMap(WeatherDataNowInfoForJson weatherDataNowInfo) {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("city", weatherDataNowInfo.getCity());
         modelMap.put("code", weatherDataNowInfo.getCode());
@@ -50,10 +52,23 @@ public class WeatherDataNowInfoController extends BaseController {
     @GetMapping(value = "/weathers/now", params = {"code"})
     public ResponseEntity<?> searchByCode(@RequestParam String code) {
         try {
+            //1从redis取 2从db取 3从api
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson = new WeatherDataNowInfoForJson();
+            //从redis缓存中取值
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson1 = redisTemplate.opsForValue().get(code);
+            if (weatherDataNowInfoForJson1 != null) {
+                weatherDataNowInfoForJson = weatherDataNowInfoForJson1;
+            }
+            //从数据库取
+            WeatherDataNowInfo weatherDataNowInfo = weatherDataNowInfoService.selectByCode(code, weatherDataNowInfoForJson);
+            if (weatherDataNowInfo != null) {
+                weatherDataNowInfoForJson = weatherDataNowInfo.getWeatherDataNowInfoForJson();
+            }
             String url = baseURL + "now" + code + key;
+            //从api取
             String jsonString = restTemplate.getForObject(url, String.class);
             JsonNode rootNode = objectMapper.readTree(jsonString);
-            WeatherDataNowInfo weatherDataNowInfo = new WeatherDataNowInfo();
+
             JsonNode weatherNode = rootNode.get("HeWeather5");
             JsonNode firstNode = weatherNode.get(1);
             JsonNode basicNode = firstNode.get("basic");
@@ -79,16 +94,27 @@ public class WeatherDataNowInfoController extends BaseController {
             //获取pres
             String presString = firstNode.get("pres").asText();
             //....
+            Long updateTime = 1L;
+            //第三个数据源仍然无法获取数据则抛出异常,停止服务
+            if (jsonString == null) {
+                throw new GetDataFromApiException("从第三方api获取数据失败");
+            }
+            //将对象存进数据库
+            weatherDataNowInfoService.insert(weatherDataNowInfo, code, updateTime);
+            //将对象缓存进redis
+            redisTemplate.opsForValue().set(weatherDataNowInfoForJson.getCode(), weatherDataNowInfoForJson);
 
 
-            weatherDataNowInfoService.selectByCode(code, weatherDataNowInfo);
-
-            if (weatherDataNowInfo == null) {
+            if (weatherDataNowInfoForJson == null) {
                 return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
             }
             Map resultMap = new HashMap();
-            resultMap = getModelResponseMap(weatherDataNowInfo);
+            resultMap = getModelResponseMap(weatherDataNowInfoForJson);
             return new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        } catch (SuchDataExistsException e) {
+            return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
+        } catch (GetDataFromApiException e) {
+            return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -105,7 +131,7 @@ public class WeatherDataNowInfoController extends BaseController {
                 return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
             }
             Map resultMap = new HashMap();
-            resultMap = getModelResponseMap(weatherDataNowInfo);
+            //resultMap = getModelResponseMap(weatherDataNowInfo);
             return new ResponseEntity<Map>(resultMap, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);

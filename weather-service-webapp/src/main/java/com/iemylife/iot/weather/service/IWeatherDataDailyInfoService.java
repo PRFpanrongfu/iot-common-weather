@@ -6,6 +6,7 @@ import java.util.List;
 
 
 public interface IWeatherDataDailyInfoService {
+    int insertBatch(List<WeatherDataDailyInfo> list);
     List<WeatherDataDailyInfo> selectByCode(String code);
 
     List<WeatherDataDailyInfo> selectByCity(String city);

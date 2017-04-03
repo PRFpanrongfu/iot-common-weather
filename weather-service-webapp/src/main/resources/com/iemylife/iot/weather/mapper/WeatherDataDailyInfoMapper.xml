@@ -32,6 +32,20 @@
         temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData,
     weatherProvider, reportDate, createTime, isActive, ts
   </sql>
+    <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO weatherdatadailyinfo
+        <include refid="Base_Column_List"/>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{id},#{city},#{code},#{condDayCode},#{condDayTxt},#{condNightCode},#{condNightTxt},#{feel},#{humidity},#{pcpn},#{pres},#{temperatureMax},#{temperatureMin},#{visibility},#{windDeg},#{windDir},#{windSc},#{windSpd},#{extendData},#{weatherProvider},#{reportDate},#{createTime},#{isActive},#{ts})
+
+        </foreach>
+    </insert>
+
     <select id="selectByCode" resultMap="BaseResultMap"
             parameterType="java.lang.String">
         select

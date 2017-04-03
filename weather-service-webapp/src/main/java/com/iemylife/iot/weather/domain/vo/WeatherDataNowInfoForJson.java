@@ -1,10 +1,14 @@
-package com.iemylife.iot.weather.domain.po;
+package com.iemylife.iot.weather.domain.vo;
 
-import com.iemylife.iot.weather.domain.vo.WeatherDataNowInfoForJson;
+import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
 
-public class WeatherDataNowInfo {
-    private Integer id;
+import java.io.Serializable;
 
+/**
+ * Created by prf on 2017/4/3.
+ */
+public class WeatherDataNowInfoForJson implements Serializable {
+    private static final long serialVersionUID = -1L;
     private String city;
 
     private String code;
@@ -40,49 +44,42 @@ public class WeatherDataNowInfo {
     private String weatherProvider;
 
     private String reportDate;
-
     private Long updateTime;
-
     private Long createTime;
-
-    private Boolean isActive;
-
+    private boolean isActive;
     private Long ts;
 
-    public WeatherDataNowInfoForJson getWeatherDataNowInfoForJson() {
-        WeatherDataNowInfoForJson weatherDataNowInfoForJson = new WeatherDataNowInfoForJson();
-        weatherDataNowInfoForJson.setCity(this.city);
-        weatherDataNowInfoForJson.setCode(this.code);
-        weatherDataNowInfoForJson.setCondCode(this.condCode);
-        weatherDataNowInfoForJson.setCondTxt(this.condTxt);
-        weatherDataNowInfoForJson.setFeel(this.feel);
-        weatherDataNowInfoForJson.setHumidity(this.humidity);
-        weatherDataNowInfoForJson.setPcpn(this.pcpn);
-        weatherDataNowInfoForJson.setPres(this.pres);
-        weatherDataNowInfoForJson.setTemperatureMax(this.temperatureMax);
-        weatherDataNowInfoForJson.setTemperatureMin(this.temperatureMin);
-        weatherDataNowInfoForJson.setVisibility(this.visibility);
-        weatherDataNowInfoForJson.setWindDeg(this.windDeg);
-        weatherDataNowInfoForJson.setWindDir(this.windDir);
-        weatherDataNowInfoForJson.setWinDsc(this.winDsc);
-        weatherDataNowInfoForJson.setWindSpd(this.windSpd);
-        weatherDataNowInfoForJson.setExtendData(this.extendData);
-        weatherDataNowInfoForJson.setWeatherProvider(this.weatherProvider);
-        weatherDataNowInfoForJson.setReportDate(this.reportDate);
-        weatherDataNowInfoForJson.setUpdateTime(this.updateTime);
-        weatherDataNowInfoForJson.setCreateTime(this.createTime);
-        weatherDataNowInfoForJson.setISActive(this.isActive);
-        weatherDataNowInfoForJson.setTs(this.ts);
 
-        return weatherDataNowInfoForJson;
+    public WeatherDataNowInfoForJson() {
     }
 
-    public Integer getId() {
-        return id;
+    public WeatherDataNowInfoForJson(String city, String code, String condCode, String condTxt, String feel, String humidity, String pcpn, String pres, String temperatureMax, String temperatureMin, String visibility, String windDeg, String windDir, String winDsc, String windSpd, String extendData, String weatherProvider, String reportDate, Long updateTime, Long createTime, boolean isActive, Long ts) {
+        this.city = city;
+        this.code = code;
+        this.condCode = condCode;
+        this.condTxt = condTxt;
+        this.feel = feel;
+        this.humidity = humidity;
+        this.pcpn = pcpn;
+        this.pres = pres;
+        this.temperatureMax = temperatureMax;
+        this.temperatureMin = temperatureMin;
+        this.visibility = visibility;
+        this.windDeg = windDeg;
+        this.windDir = windDir;
+        this.winDsc = winDsc;
+        this.windSpd = windSpd;
+        this.extendData = extendData;
+        this.weatherProvider = weatherProvider;
+        this.reportDate = reportDate;
+        this.updateTime = updateTime;
+        this.createTime = createTime;
+        this.isActive = isActive;
+        this.ts = ts;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getCity() {
@@ -90,7 +87,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setCity(String city) {
-        this.city = city == null ? null : city.trim();
+        this.city = city;
     }
 
     public String getCode() {
@@ -98,7 +95,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
+        this.code = code;
     }
 
     public String getCondCode() {
@@ -106,7 +103,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setCondCode(String condCode) {
-        this.condCode = condCode == null ? null : condCode.trim();
+        this.condCode = condCode;
     }
 
     public String getCondTxt() {
@@ -114,7 +111,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setCondTxt(String condTxt) {
-        this.condTxt = condTxt == null ? null : condTxt.trim();
+        this.condTxt = condTxt;
     }
 
     public String getFeel() {
@@ -122,7 +119,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setFeel(String feel) {
-        this.feel = feel == null ? null : feel.trim();
+        this.feel = feel;
     }
 
     public String getHumidity() {
@@ -130,7 +127,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setHumidity(String humidity) {
-        this.humidity = humidity == null ? null : humidity.trim();
+        this.humidity = humidity;
     }
 
     public String getPcpn() {
@@ -138,7 +135,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setPcpn(String pcpn) {
-        this.pcpn = pcpn == null ? null : pcpn.trim();
+        this.pcpn = pcpn;
     }
 
     public String getPres() {
@@ -146,7 +143,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setPres(String pres) {
-        this.pres = pres == null ? null : pres.trim();
+        this.pres = pres;
     }
 
     public String getTemperatureMax() {
@@ -154,7 +151,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setTemperatureMax(String temperatureMax) {
-        this.temperatureMax = temperatureMax == null ? null : temperatureMax.trim();
+        this.temperatureMax = temperatureMax;
     }
 
     public String getTemperatureMin() {
@@ -162,7 +159,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setTemperatureMin(String temperatureMin) {
-        this.temperatureMin = temperatureMin == null ? null : temperatureMin.trim();
+        this.temperatureMin = temperatureMin;
     }
 
     public String getVisibility() {
@@ -170,7 +167,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setVisibility(String visibility) {
-        this.visibility = visibility == null ? null : visibility.trim();
+        this.visibility = visibility;
     }
 
     public String getWindDeg() {
@@ -178,7 +175,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setWindDeg(String windDeg) {
-        this.windDeg = windDeg == null ? null : windDeg.trim();
+        this.windDeg = windDeg;
     }
 
     public String getWindDir() {
@@ -186,7 +183,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setWindDir(String windDir) {
-        this.windDir = windDir == null ? null : windDir.trim();
+        this.windDir = windDir;
     }
 
     public String getWinDsc() {
@@ -194,7 +191,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setWinDsc(String winDsc) {
-        this.winDsc = winDsc == null ? null : winDsc.trim();
+        this.winDsc = winDsc;
     }
 
     public String getWindSpd() {
@@ -202,7 +199,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setWindSpd(String windSpd) {
-        this.windSpd = windSpd == null ? null : windSpd.trim();
+        this.windSpd = windSpd;
     }
 
     public String getExtendData() {
@@ -210,7 +207,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setExtendData(String extendData) {
-        this.extendData = extendData == null ? null : extendData.trim();
+        this.extendData = extendData;
     }
 
     public String getWeatherProvider() {
@@ -218,7 +215,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setWeatherProvider(String weatherProvider) {
-        this.weatherProvider = weatherProvider == null ? null : weatherProvider.trim();
+        this.weatherProvider = weatherProvider;
     }
 
     public String getReportDate() {
@@ -226,7 +223,7 @@ public class WeatherDataNowInfo {
     }
 
     public void setReportDate(String reportDate) {
-        this.reportDate = reportDate == null ? null : reportDate.trim();
+        this.reportDate = reportDate;
     }
 
     public Long getUpdateTime() {
@@ -245,12 +242,12 @@ public class WeatherDataNowInfo {
         this.createTime = createTime;
     }
 
-    public Boolean getIsActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
+    public void setISActive(boolean active) {
+        isActive = active;
     }
 
     public Long getTs() {

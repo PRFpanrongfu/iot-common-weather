@@ -1,14 +1,12 @@
 package com.iemylife.iot.weather.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.domain.vo.CityInfoForJson;
 import com.iemylife.iot.weather.domain.vo.CityInfoReturnValue;
 import com.iemylife.iot.weather.service.impl.CityInfoServiceImpl;
-import com.sun.deploy.trace.SocketTraceListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,6 @@ import java.util.*;
  */
 @RestController
 public class CityInfoController extends BaseController {
-    private static final String EMPTY_RESPONESEBODY_VALUE = "{}";
     @Autowired
     private CityInfoServiceImpl cityInfoService;
 
@@ -46,7 +43,7 @@ public class CityInfoController extends BaseController {
         try {
             int id = cityInfoService.insertSelective(cityInfo);
             if (id < 1) {
-                return new ResponseEntity<Object>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<Integer>(id, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
@@ -61,9 +58,9 @@ public class CityInfoController extends BaseController {
 
         try {
             cityInfoService.deleteByCode(code);
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.OK);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.OK);
         } catch (NullPointerException e) {
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,11 +72,11 @@ public class CityInfoController extends BaseController {
 
         try {
             if (cityInfoService.updateByCodeSelective(code, cityInfo) < 1) {
-                return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.OK);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,16 +88,16 @@ public class CityInfoController extends BaseController {
         try {
             CityInfo cityInfo = cityInfoService.selectByCode(code);
             if (cityInfo.getId() == 0) {
-                return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
             }
 
             Map<String, Object> modelMapResponse = new HashMap<>();
             modelMapResponse = getModelResponseMap(cityInfo);
             return new ResponseEntity<Object>(modelMapResponse, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (NullPointerException e) {
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -111,10 +108,15 @@ public class CityInfoController extends BaseController {
         List<CityInfo> cityInfoList = new ArrayList<>();
         cityInfoList = cityInfoService.selectBymodelIdAndPage(code, size, page);
         if (cityInfoList == null) {
-            return new ResponseEntity<String>(EMPTY_RESPONESEBODY_VALUE, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
         }
-        List<CityInfoReturnValue> cityInfoReturnValues = new ArrayList<>();
-        for (CityInfo cityInfoTemp : cityInfoList) {
+        //添加操作使用LinkedList
+        List<CityInfoReturnValue> cityInfoReturnValues = new LinkedList<>();
+        //for (CityInfo cityInfoTemp : cityInfoList) {
+        //    cityInfoReturnValues.add(cityInfoTemp.getCityInfoReturnValue());
+        //}
+        for (int i = 1, length = cityInfoList.size(); i < length; i++) {
+            CityInfo cityInfoTemp = cityInfoList.get(i);
             cityInfoReturnValues.add(cityInfoTemp.getCityInfoReturnValue());
         }
         return new ResponseEntity<List<CityInfoReturnValue>>(cityInfoReturnValues, HttpStatus.OK);
@@ -136,8 +138,12 @@ public class CityInfoController extends BaseController {
             List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, List.class);
 
             List<CityInfo> cityInfoList = new ArrayList<>();
-            for (CityInfoForJson info : listCity) {
-                cityInfoList.add(info.getCityInfo());
+            //for(CityInfoForJson info : listCity) {
+            //    cityInfoList.add(info.getCityInfo());
+            //}
+            for (int i = 1, length = listCity.size(); i < length; i++) {
+                CityInfoForJson cityInfoForJson = listCity.get(i);
+                cityInfoList.add(cityInfoForJson.getCityInfo());
             }
             cityInfoService.insertBatch(cityInfoList);
         } catch (TruncateTableException e) {

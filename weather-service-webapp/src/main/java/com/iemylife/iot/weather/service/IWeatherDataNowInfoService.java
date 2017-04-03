@@ -1,10 +1,14 @@
 package com.iemylife.iot.weather.service;
 
+import com.iemylife.iot.weather.domain.exception.SuchDataExistsException;
 import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
+import com.iemylife.iot.weather.domain.vo.WeatherDataNowInfoForJson;
 
 
 public interface IWeatherDataNowInfoService {
-    WeatherDataNowInfo selectByCode(String code, WeatherDataNowInfo weatherDataNowInfo);
+    int insert(WeatherDataNowInfo weatherDataNowInfo, String code, Long nowTimeStamp) throws SuchDataExistsException;
+
+    WeatherDataNowInfo selectByCode(String code, WeatherDataNowInfoForJson weatherDataNowInfo);
 
     WeatherDataNowInfo selectByCity(String city);
 }

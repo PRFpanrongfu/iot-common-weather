@@ -17,6 +17,12 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
     private WeatherDataDailyInfoMapper weatherDataDailyInfoMapper;
 
     @Override
+    public int insertBatch(List<WeatherDataDailyInfo> list) {
+
+        return weatherDataDailyInfoMapper.insertBatch(list);
+    }
+
+    @Override
     public List<WeatherDataDailyInfo> selectByCode(String code) {
         if (code.trim().length() == 0 || code.trim().length() > 100) {
             throw new IllegalArgumentException("参数错误");

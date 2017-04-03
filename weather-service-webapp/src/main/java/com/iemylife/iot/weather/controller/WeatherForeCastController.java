@@ -1,5 +1,6 @@
 package com.iemylife.iot.weather.controller;
 
+import com.iemylife.iot.weather.domain.exception.GetDataFromApiException;
 import com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo;
 import com.iemylife.iot.weather.service.impl.WeatherDataDailyInfoServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,8 @@ import java.util.*;
  */
 @RestController
 public class WeatherForeCastController extends BaseController {
-    private static final String EMPTY_RESPONSEBODY_VALUE = "{}";
+
+
     @Autowired
     private WeatherDataDailyInfoServicesImpl weatherDataDailyInfoServices;
 
@@ -36,17 +38,32 @@ public class WeatherForeCastController extends BaseController {
     @GetMapping(value = "/weathers/now", params = {"code"})
     public ResponseEntity<?> searchByCode(@RequestParam String code) {
         try {
-            List<WeatherDataDailyInfo> weatherDataNowInfo = weatherDataDailyInfoServices.selectByCode(code);
+            //1从db获取数据 2从api获取数据
+            List<WeatherDataDailyInfo> weatherDataDailyInfo = new ArrayList<>();
+            List<WeatherDataDailyInfo> weatherDataDailyInfo1 = weatherDataDailyInfoServices.selectByCode(code);
+            if (weatherDataDailyInfo1 != null) {
+                weatherDataDailyInfo = weatherDataDailyInfo1;
+            }
+            //从api获取
+            String url = baseURL + "forecast" + code + key;
+            String jsonString = restTemplate.getForObject(url, String.class);
+            if (jsonString == null) {
+                throw new GetDataFromApiException("从第三方api获取数据失败");
+            }
+            //将获取的数据留存到数据库
+            weatherDataDailyInfoServices.insertBatch(weatherDataDailyInfo);
             List<Object> modelResponseList = new ArrayList<>();
-            if (weatherDataNowInfo == null) {
+            if (weatherDataDailyInfo == null) {
                 return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
             }
 
-            for (WeatherDataDailyInfo item : weatherDataNowInfo) {
+            for (WeatherDataDailyInfo item : weatherDataDailyInfo) {
                 Map<String, Object> modelMapResponse = getModelResponseMap(item);
                 modelResponseList.add(modelMapResponse);
             }
             return new ResponseEntity<List>(modelResponseList, HttpStatus.OK);
+        } catch (GetDataFromApiException e) {
+            return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

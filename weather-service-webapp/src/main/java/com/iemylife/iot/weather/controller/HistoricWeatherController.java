@@ -15,7 +15,6 @@ import java.util.Map;
  */
 @RestController
 public class HistoricWeatherController extends BaseController {
-    private static final String EMPTY_RESPONSEBODY_VALUE = "{}";
 
     @Autowired
     private WeatherDataDailyInfoServicesImpl weatherDataDailyInfoServices;
