@@ -8,6 +8,7 @@ import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
 import com.iemylife.iot.weather.domain.vo.WeatherDataNowInfoForJson;
 import com.iemylife.iot.weather.service.impl.WeatherDataNowInfoServiceImpl;
+import com.iemylife.iot.weather.util.ServiceUtils;
 import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 实况天气
@@ -52,7 +53,7 @@ public class WeatherDataNowInfoController extends BaseController {
     @GetMapping(value = "/weathers/now", params = {"code"})
     public ResponseEntity<?> searchByCode(@RequestParam String code) {
         try {
-            //1从redis取 2从db取 3从api
+            //1从redis获取数据 2从db获取数据 3从api获取数据
             WeatherDataNowInfoForJson weatherDataNowInfoForJson = new WeatherDataNowInfoForJson();
             //从redis缓存中取值
             WeatherDataNowInfoForJson weatherDataNowInfoForJson1 = redisTemplate.opsForValue().get(code);
@@ -64,7 +65,7 @@ public class WeatherDataNowInfoController extends BaseController {
             if (weatherDataNowInfo != null) {
                 weatherDataNowInfoForJson = weatherDataNowInfo.getWeatherDataNowInfoForJson();
             }
-            String url = baseURL + "now" + code + key;
+            String url = BASE_URL + "now" + code + KEY;
             //从api取
             String jsonString = restTemplate.getForObject(url, String.class);
             JsonNode rootNode = objectMapper.readTree(jsonString);
@@ -94,7 +95,28 @@ public class WeatherDataNowInfoController extends BaseController {
             //获取pres
             String presString = firstNode.get("pres").asText();
             //....
-            Long updateTime = 1L;
+            String tempatureMax = firstNode.get("tmp").asText();
+            String tempatureMin = firstNode.get("tmp").asText();
+            String visibility = firstNode.get("vis").asText();
+            JsonNode windNode = firstNode.get("wind");
+            String windDeg = windNode.get("deg").asText();
+            String windDir = windNode.get("dir").asText();
+            String windSc = windNode.get("sc").asText();
+            String windSpd = windNode.get("sc").asText();
+            String extendData = "";
+            String weatherProvider = firstNode.asText();
+            JsonNode timeNode = firstNode.get("update");
+            //
+            String updateTimeString = timeNode.get("utc").asText();//更新时间utc时间戳,十位数时间戳
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date updateTimeDate = dateFormat.parse(updateTimeString);
+            Long updateTime = ServiceUtils.getTenNumbersTimeStamp(updateTimeDate);
+            //
+            Date date = new Date();
+            Long createTime = ServiceUtils.getTenNumbersTimeStamp(date);//十位数时间戳
+            boolean isActive = true;
+            Long ts = ServiceUtils.getTenNumbersTimeStamp(date);
+
             //第三个数据源仍然无法获取数据则抛出异常,停止服务
             if (jsonString == null) {
                 throw new GetDataFromApiException("从第三方api获取数据失败");

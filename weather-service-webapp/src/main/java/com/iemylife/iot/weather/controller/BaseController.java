@@ -11,8 +11,8 @@ import static org.apache.coyote.http11.Constants.a;
  */
 public class BaseController {
     public static final String EMPTY_RESPONSEBODY_VALUE = "{}";//重复使用的String
+    public static final String BASE_URL = "https://free-api.heweather.com/v5/";//接口地址
+    public static final String KEY = "&key=41f448ef42e54a36a892838fa98d71da";//接口key
     public RestTemplate restTemplate = new RestTemplate();
-    public String baseURL = "https://free-api.heweather.com/v5/";//接口地址
-    public String key = "&key=41f448ef42e54a36a892838fa98d71da";//接口key
     public ObjectMapper objectMapper = new ObjectMapper();
 }
