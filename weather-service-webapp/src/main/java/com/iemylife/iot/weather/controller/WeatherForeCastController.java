@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import static javafx.scene.input.KeyCode.J;
-
 /**
  * Created by prf on 2017/3/30.
  */
@@ -58,44 +56,74 @@ public class WeatherForeCastController extends BaseController {
             JsonNode weatherNode = rootNode.get(1);
             JsonNode firstNode = weatherNode.get(1);
             JsonNode basicNode = firstNode.get("basic");
-
-            String city = basicNode.get("city").asText();
-            String codeStr = basicNode.get("id").asText();
-
             JsonNode dailyForecastNode = firstNode.get("daily_forecast");
             JsonNode firstNodeDFN = dailyForecastNode.get(1);
-            JsonNode condNode = firstNodeDFN.get("cond");
-            String condDayCode = condNode.get("code_d").asText();
-            String condDayTxt = condNode.get("txt_d").asText();
-            String condNightCode = condNode.get("code_n").asText();
-            String condNightTxt = condNode.get("txt_n").asText();
 
-            JsonNode tmpNode = firstNodeDFN.get("tmp");
-            String feel = tmpNode.get("min").asText();
-            String humidity = firstNodeDFN.get("hum").asText();
-            String pcpn = firstNodeDFN.get("pcpn").asText();
-            String pres = firstNodeDFN.get("pres").asText();
-            String temperatureMax = tmpNode.get("max").asText();
-            String temperatureMin = tmpNode.get("min").asText();
-            String visibility = firstNodeDFN.get("vis").asText();
-
-            JsonNode windNode = firstNodeDFN.get("wind");
-            String windDeg = windNode.get("deg").asText();
-            String windDir = windNode.get("dir").asText();
-            String windSc = windNode.get("sc").asText();
-            String windSpd = windNode.get("spd").asText();
-            String extendData = "";
-            String weatherProvider = weatherNode.asText();
-
-            JsonNode timeNode = basicNode.get("update");
-            String reportDate = timeNode.get("loc").asText().trim().substring(0, 9);//报告日期yyyy-MM-dd格式字符串
             Date date = new Date();
-            Long createTime = ServiceUtils.getTenNumbersTimeStamp(date);
-            boolean isActive = true;
-            Long ts = date.getTime();
-            WeatherDataDailyInfo weatherDataDailyInfo2 = new WeatherDataDailyInfo();
-            //weatherDataDailyInfo2.set(...)
+            List<WeatherDataDailyInfo> weatherDataDailyInfo2 = new ArrayList<>();
+            WeatherDataDailyInfo weatherDataDailyInfo3 = new WeatherDataDailyInfo();
+            for (int i = 1, nodeLength = dailyForecastNode.size(); i < nodeLength; i++) {
 
+                JsonNode condNode = dailyForecastNode.get(i).get("cond");
+                String condDayCodeStr = condNode.get("code_d").asText();
+                String condDayTxtStr = condNode.get("txt_d").asText();
+                String condNightCodeStr = condNode.get("code_n").asText();
+                String condNightTxtStr = condNode.get("txt_n").asText();
+
+                JsonNode tmpNode = dailyForecastNode.get(i).get("tmp");
+                String feelStr = tmpNode.get("min").asText();
+                String humidityStr = dailyForecastNode.get(i).get("hum").asText();
+                String pcpnStr = dailyForecastNode.get(i).get("pcpn").asText();
+                String presStr = dailyForecastNode.get(i).get("pres").asText();
+                String temperatureMaxStr = tmpNode.get("max").asText();
+                String temperatureMinStr = tmpNode.get("min").asText();
+                String visibilityStr = dailyForecastNode.get(i).get("vis").asText();
+
+                JsonNode windNode = dailyForecastNode.get(i).get("wind");
+                String windDegStr = windNode.get("deg").asText();
+                String windDirStr = windNode.get("dir").asText();
+                String windScStr = windNode.get("sc").asText();
+                String windSpdStr = windNode.get("spd").asText();
+
+                String reportDateStr = dailyForecastNode.get(i).get("date").asText().trim();//报告日期yyyy-MM-dd格式字符串
+                String cityStr = basicNode.get("city").asText();
+                String codeStr = basicNode.get("id").asText();
+
+
+                String extendDataStr = "";
+                String weatherProviderStr = weatherNode.asText();
+
+                JsonNode timeNode = basicNode.get("update");
+                Long createTime = ServiceUtils.getTenNumbersTimeStamp(date);
+                boolean isActive = true;
+                Long ts = date.getTime();
+
+                //将获取的值赋给WeatherDataDailyInfo对象
+                weatherDataDailyInfo3.setCity(cityStr);
+                weatherDataDailyInfo3.setCode(codeStr);
+                weatherDataDailyInfo3.setCondDayCode(condDayCodeStr);
+                weatherDataDailyInfo3.setCondDayTxt(condDayTxtStr);
+                weatherDataDailyInfo3.setCondNightCode(condNightCodeStr);
+                weatherDataDailyInfo3.setCondNightTxt(condNightTxtStr);
+                weatherDataDailyInfo3.setFeel(feelStr);
+                weatherDataDailyInfo3.setHumidity(humidityStr);
+                weatherDataDailyInfo3.setPcpn(pcpnStr);
+                weatherDataDailyInfo3.setPres(presStr);
+                weatherDataDailyInfo3.setTemperatureMax(temperatureMaxStr);
+                weatherDataDailyInfo3.setTemperatureMin(temperatureMinStr);
+                weatherDataDailyInfo3.setVisibility(visibilityStr);
+                weatherDataDailyInfo3.setWindDeg(windDegStr);
+                weatherDataDailyInfo3.setWindDir(windDirStr);
+                weatherDataDailyInfo3.setWindSc(windScStr);
+                weatherDataDailyInfo3.setWindSpd(windSpdStr);
+                weatherDataDailyInfo3.setExtendData(extendDataStr);
+                weatherDataDailyInfo3.setReportDate(reportDateStr);
+                weatherDataDailyInfo3.setCreateTime(createTime);
+                weatherDataDailyInfo3.setIsActive(isActive);
+                weatherDataDailyInfo3.setTs(ts);
+
+                weatherDataDailyInfo2.add(weatherDataDailyInfo3);
+            }
 
             //将获取的数据留存到数据库
             weatherDataDailyInfoServices.insertBatch(weatherDataDailyInfo);

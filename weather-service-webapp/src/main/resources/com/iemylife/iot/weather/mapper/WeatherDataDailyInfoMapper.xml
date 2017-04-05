@@ -16,7 +16,7 @@
         <result column="temperatureMax" property="temperatureMax" jdbcType="VARCHAR"/>
         <result column="temperatureMin" property="temperatureMin" jdbcType="VARCHAR"/>
         <result column="visibility" property="visibility" jdbcType="VARCHAR"/>
-        <result column="winDeg" property="winDeg" jdbcType="VARCHAR"/>
+        <result column="windDeg" property="windDeg" jdbcType="VARCHAR"/>
         <result column="windDir" property="windDir" jdbcType="VARCHAR"/>
         <result column="windSc" property="windSc" jdbcType="VARCHAR"/>
         <result column="windSpd" property="windSpd" jdbcType="VARCHAR"/>
@@ -29,7 +29,7 @@
     </resultMap>
     <sql id="Base_Column_List">
         id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,
-        temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData,
+        temperatureMax, temperatureMin, visibility, windDeg, windDir, windSc, windSpd, extendData,
     weatherProvider, reportDate, createTime, isActive, ts
   </sql>
     <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">

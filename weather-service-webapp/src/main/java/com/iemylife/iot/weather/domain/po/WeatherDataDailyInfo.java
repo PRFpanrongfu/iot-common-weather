@@ -28,7 +28,7 @@ public class WeatherDataDailyInfo {
 
     private String visibility;
 
-    private String winDeg;
+    private String windDeg;
 
     private String windDir;
 
@@ -160,12 +160,12 @@ public class WeatherDataDailyInfo {
         this.visibility = visibility == null ? null : visibility.trim();
     }
 
-    public String getWinDeg() {
-        return winDeg;
+    public String getWindDeg() {
+        return windDeg;
     }
 
-    public void setWinDeg(String winDeg) {
-        this.winDeg = winDeg == null ? null : winDeg.trim();
+    public void setWindDeg(String windDeg) {
+        this.windDeg = windDeg == null ? null : windDeg.trim();
     }
 
     public String getWindDir() {
