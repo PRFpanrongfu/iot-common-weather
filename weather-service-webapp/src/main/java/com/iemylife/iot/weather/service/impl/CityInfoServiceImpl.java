@@ -27,7 +27,7 @@ public class CityInfoServiceImpl implements ICityInfoService {
      * 修改一条记录等价于
      * 删除一条记录等价于,传入isActive参数为0
      *
-     * @param code 城市代码
+     * @param code             城市代码
      * @param remanentCityInfo
      * @return
      */
@@ -76,7 +76,10 @@ public class CityInfoServiceImpl implements ICityInfoService {
     }
 
     @Override
-    public List<CityInfo> selectBymodelIdAndPage(@Param("code") String code, @Param("size") Integer size, @Param("page") Integer page) {
+    public List<CityInfo> selectBymodelIdAndPage(String code, Integer size, Integer page) {
+        if (code == null || code.trim().length() == 0 || code.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
         return cityInfoMapper.selectByCodeAndPage(code, size, page);
     }
 
