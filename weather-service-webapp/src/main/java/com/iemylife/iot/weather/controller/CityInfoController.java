@@ -1,17 +1,13 @@
 package com.iemylife.iot.weather.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
-import com.iemylife.iot.weather.domain.vo.CityInfoForJson;
 import com.iemylife.iot.weather.domain.vo.CityInfoReturnValue;
 import com.iemylife.iot.weather.service.impl.CityInfoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.*;
@@ -112,9 +108,7 @@ public class CityInfoController extends BaseController {
         }
         //添加操作使用LinkedList
         List<CityInfoReturnValue> cityInfoReturnValues = new LinkedList<>();
-        //for (CityInfo cityInfoTemp : cityInfoList) {
-        //    cityInfoReturnValues.add(cityInfoTemp.getCityInfoReturnValue());
-        //}
+
         for (int i = 1, length = cityInfoList.size(); i < length; i++) {
             CityInfo cityInfoTemp = cityInfoList.get(i);
             cityInfoReturnValues.add(cityInfoTemp.getCityInfoReturnValue());
@@ -127,25 +121,12 @@ public class CityInfoController extends BaseController {
      * 添加所有城市信息到数据库
      */
     @GetMapping("/citys/refresh")
-    public void reshCityInfos() throws IOException {
-
+    public void reshCityInfos() {
         try {
-            RestTemplate restTemplate = new RestTemplate();
-            String returnValue = restTemplate.getForObject("https://cdn.heweather.com/china-city-list.json", String.class);
+            cityInfoService.refreshCityInfos();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);  //只对实体起作用，对map不起作用
-            List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, List.class);
-
-            List<CityInfo> cityInfoList = new ArrayList<>();
-            //for(CityInfoForJson info : listCity) {
-            //    cityInfoList.add(info.getCityInfo());
-            //}
-            for (int i = 1, length = listCity.size(); i < length; i++) {
-                CityInfoForJson cityInfoForJson = listCity.get(i);
-                cityInfoList.add(cityInfoForJson.getCityInfo());
-            }
-            cityInfoService.insertBatch(cityInfoList);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } catch (TruncateTableException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {

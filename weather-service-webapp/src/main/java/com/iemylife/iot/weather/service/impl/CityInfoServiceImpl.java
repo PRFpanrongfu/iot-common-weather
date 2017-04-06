@@ -3,14 +3,13 @@ package com.iemylife.iot.weather.service.impl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemylife.iot.weather.config.HeWeatherConfig;
 import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.domain.vo.CityInfoForJson;
-import com.iemylife.iot.weather.domain.vo.RemanentCityInfo;
 import com.iemylife.iot.weather.mapper.CityInfoMapper;
 import com.iemylife.iot.weather.service.ICityInfoService;
 import com.iemylife.iot.weather.util.ServiceUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,47 +23,41 @@ import java.util.*;
  */
 @Service
 public class CityInfoServiceImpl implements ICityInfoService {
-    @Value(value = "${weather.citylist-url}")
-    private String url;//城市信息列表url,在application.properties中配置
+    @Autowired
+    private HeWeatherConfig weatherConfig;//天气相关配置项
+
     @Autowired
     private CityInfoMapper cityInfoMapper;
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private RestTemplate restTemplate = new RestTemplate();//用于调用第三方api,有异步版本
+
+    private ObjectMapper objectMapper = new ObjectMapper();//用于解析json字符串
 
     public void refreshCityInfos() throws IOException, TruncateTableException {
+        //调用api,获取城市信息列表
+        String returnValue = restTemplate.getForObject(weatherConfig.getCityInfoUrl(), String.class);
 
-        String returnValue = restTemplate.getForObject(url, String.class);
-
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);  //只对实体起作用，对map不起作用
-        //List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, List.class);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);//排除值为null的值 //只对实体起作用，对map不起作用
         List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, new TypeReference<List<CityInfoForJson>>() {
-        });//转换为List
+        });//将json串转换为List,注意写法
 
         List<CityInfo> cityInfoList = new ArrayList<>();
-
+        //将序列化的List遍历
         for (int i = 1, length = listCity.size(); i < length; i++) {
+            //取出listCity中的CityInfoForJson对象
             CityInfoForJson cityInfoForJson = listCity.get(i);
+            //取出CityInfoForJson中和CityInfo对象对应的值赋给CityInfo对象
+            //将新赋值的CityInfo对象存入新的List
             cityInfoList.add(cityInfoForJson.getCityInfo());
         }
+        //执行批量插入操作前先进行整体删除,确保数据最新
+        if (cityInfoMapper.truncateCityInfo() < 1) {
+            throw new TruncateTableException("删除数据数据失败");
+        }
+        //执行批量插入操作
         insertBatch(cityInfoList);
     }
 
-    /**
-     * 更新剩余字段
-     * 此方法可用做插入,数据库里已存在全国城市的信息,insert语句没有太大意义
-     * 插入一条记录可看做激活一条记录(置isActive=1),同时插入createTime lastUpdateTime ts
-     * 修改一条记录等价于
-     * 删除一条记录等价于,传入isActive参数为0
-     *
-     * @param code             城市代码
-     * @param remanentCityInfo
-     * @return
-     */
-    @Override
-    public int updateRemanentField(String code, RemanentCityInfo remanentCityInfo) {
-        return cityInfoMapper.updateRemanentField(code, remanentCityInfo);
-    }
 
     @Override
     public int truncateCityInfo() {
@@ -73,30 +66,8 @@ public class CityInfoServiceImpl implements ICityInfoService {
 
     @Override
     public int insertBatch(List<CityInfo> cityInfoList) throws TruncateTableException {
-        //CityInfo info = new CityInfo();
-        //for (CityInfo cityinfo : cityInfoList) {
-        //    //info = cityinfo;
-        //    String code = cityinfo.getCode();
-        //    if (!(cityInfoMapper.selectByCode(code) == null)) {
-        //        throw new IllegalArgumentException("已存在不需要更新");
-        //    }
-        //}
-        //验证数据库中一条记录是否对应cityInfoList中的一个CityInfo对象
-        //若存在,将cityInfoList中的此对象删除,再进行批量插入
-        //List<String> codeList = new ArrayList<>();
-        //for (int i = 1; i < cityInfoList.size(); i++) {
-        //    CityInfo cityInfo = cityInfoList.get(i);
-        //    codeList.set(i, cityInfo.getCode());
-        //    String code = codeList.get(i);
-        //    CityInfo cityInfo1 = cityInfoMapper.selectByCode(code);
-        //    if (cityInfo1 != null) {
-        //        cityInfoList.remove(i);
-        //    }
-        //    cityInfoMapper.insertBatch(cityInfoList);
-        //
-        //}
 
-        //整体删除在批量插入,确保数据最新
+        //整体删除再批量插入,确保数据最新
         if (cityInfoMapper.truncateCityInfo() < 1) {
             throw new TruncateTableException("删除数据数据失败");
         }

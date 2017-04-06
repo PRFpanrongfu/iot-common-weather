@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface WeatherDataDailyInfoMapper {
     int insertBatch(List<WeatherDataDailyInfo> list);
+
     List<WeatherDataDailyInfo> selectByCode(String code);
 
     List<WeatherDataDailyInfo> selectByCity(String city);

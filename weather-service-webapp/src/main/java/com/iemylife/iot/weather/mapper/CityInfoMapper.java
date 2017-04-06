@@ -1,7 +1,6 @@
 package com.iemylife.iot.weather.mapper;
 
 import com.iemylife.iot.weather.domain.po.CityInfo;
-import com.iemylife.iot.weather.domain.vo.RemanentCityInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface CityInfoMapper {
-    int updateRemanentField(@Param("code") String code, @Param("remanentCityInfo") RemanentCityInfo remanentCityInfo);
+
+    CityInfo selectByCity(String city);
 
     int truncateCityInfo();
 

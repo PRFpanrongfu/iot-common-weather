@@ -3,13 +3,44 @@ package com.iemylife.iot.weather.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by prf on 2017/4/1.
  */
 public class JsonUtils {
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    public static Object getValue(String json, String key, Integer lv) {
+        Integer currentLv = 1;
+        try {
+            Map<String, Object> root = mapper.readValue(json, Map.class);
+            if (root.size() == 0) {
+                throw new Exception("格式有误");
+            }
+
+            for (Map.Entry<String, Object> entry : root.entrySet()) {
+
+
+            }
+            currentLv++;
+
+            if (lv < currentLv) {
+                return null;
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("格式有误");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return "";
+    }
 
     /**
      * 从json中读取tagPath处的值 tagPath用 :分隔

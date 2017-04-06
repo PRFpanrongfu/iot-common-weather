@@ -10,5 +10,5 @@ public interface IWeatherDataNowInfoService {
 
     WeatherDataNowInfo selectByCode(String code, WeatherDataNowInfoForJson weatherDataNowInfo);
 
-    WeatherDataNowInfo selectByCity(String city);
+    String selectByCity(String city);
 }

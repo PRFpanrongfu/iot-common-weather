@@ -2,6 +2,7 @@ package com.iemylife.iot.weather.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemylife.iot.weather.config.HeWeatherConfig;
 import com.iemylife.iot.weather.domain.exception.GetDataFromApiException;
 import com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo;
 import com.iemylife.iot.weather.mapper.WeatherDataDailyInfoMapper;
@@ -15,26 +16,26 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.*;
 
+import static com.sun.org.apache.xml.internal.security.keys.keyresolver.KeyResolver.length;
+
 /**
  * Created by prf on 2017/3/29.
  */
 @Service
 public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoService {
     //从配置文件(application.properties)读取相关配置信息
-    @Value(value = ("${weather.api-url}"))
-    public String BASE_URL;////接口地址
-    @Value(value = ("${weather.api-key}"))
-    public String KEY;//接口key
-    @Value(value = "${weahter.provider}")
-    public String weatherProvider;//天气数据供应商
-    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Autowired
-    private RestTemplate restTemplate;
+    private HeWeatherConfig weatherConfig;
+    private ObjectMapper objectMapper = new ObjectMapper();
+    //@Autowired
+    //private RestTemplate restTemplate;
     @Autowired
     private WeatherDataDailyInfoMapper weatherDataDailyInfoMapper;
 
     public List<WeatherDataDailyInfo> getWeatherForecastFromAPIByCode(String code) throws GetDataFromApiException, IOException {
-        String url = BASE_URL + "forecast" + code + KEY;
+        RestTemplate restTemplate = new RestTemplate();
+        String url = weatherConfig.getApiUrl() + "forecast" + code + weatherConfig.getKey();
         String jsonString = restTemplate.getForObject(url, String.class);
         if (jsonString == null) {
             throw new GetDataFromApiException("从第三方api获取数据失败");
@@ -118,7 +119,8 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
     }
 
     public List<WeatherDataDailyInfo> getWeatherForecastFromAPIByCity(String city) throws GetDataFromApiException, IOException {
-        String url = BASE_URL + "forecast" + city + KEY;
+        RestTemplate restTemplate = new RestTemplate();
+        String url = weatherConfig.getApiUrl() + "forecast" + city + weatherConfig.getKey();
         String jsonString = restTemplate.getForObject(url, String.class);
         if (jsonString == null) {
             throw new GetDataFromApiException("从第三方api获取数据失败");
@@ -229,6 +231,9 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
         if (code.trim().length() == 0 || code.trim().length() > 100) {
             throw new IllegalArgumentException("参数错误");
         }
+        if (date.length() > 10) {
+            throw new IllegalArgumentException("参数错误");
+        }
         return weatherDataDailyInfoMapper.selectByCodeAndDate(code, date);
 
     }
@@ -236,6 +241,9 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
     @Override
     public WeatherDataDailyInfo selectByCityAndDate(String city, String date) {
         if (city.trim().length() == 0 || city.trim().length() > 100) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        if (date.trim().length() == 0 || date.trim().length() > 10) {
             throw new IllegalArgumentException("参数错误");
         }
         return weatherDataDailyInfoMapper.selectByCityAndDate(city, date);

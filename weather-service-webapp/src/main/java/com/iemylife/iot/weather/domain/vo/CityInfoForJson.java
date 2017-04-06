@@ -3,8 +3,6 @@ package com.iemylife.iot.weather.domain.vo;
 import com.iemylife.iot.weather.domain.po.CityInfo;
 import com.iemylife.iot.weather.util.ServiceUtils;
 
-import java.util.Date;
-
 /**
  * Created by prf on 2017/3/31.
  */
@@ -24,7 +22,7 @@ public class CityInfoForJson {
 
     public CityInfo getCityInfo() {
 
-        Date date = new Date();
+
         CityInfo cityInfo = new CityInfo();
         //将数据库字段和json返回值一一对应
         cityInfo.setProvince(this.provinceZh);
@@ -35,10 +33,10 @@ public class CityInfoForJson {
         cityInfo.setDistrictZh(this.countryZh);
         cityInfo.setLon(this.lon);
         cityInfo.setLat(this.lat);
-        cityInfo.setCreateTime(ServiceUtils.getTenNumbersTimeStamp(date));
-        cityInfo.setLastupdateTime(ServiceUtils.getTenNumbersTimeStamp(date));
-        cityInfo.setTs(date.getTime());
-        cityInfo.setIsActive(true);//置1
+        cityInfo.setCreateTime(ServiceUtils.getUTCTimeStamp(10));
+        cityInfo.setLastupdateTime(ServiceUtils.getUTCTimeStamp(10));
+        cityInfo.setTs(ServiceUtils.getUTCTimeStamp(13));
+        cityInfo.setIsActive(true);//置true对应数据库值为1(激活状态)
         return cityInfo;
     }
 

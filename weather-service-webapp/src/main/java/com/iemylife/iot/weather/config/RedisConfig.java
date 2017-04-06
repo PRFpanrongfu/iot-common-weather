@@ -21,20 +21,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig extends CachingConfigurerSupport {
 
 
-    @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
-    }
-
-    @Bean
-    public RedisTemplate<String, WeatherDataNowInfo> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, WeatherDataNowInfo> template = new RedisTemplate<String, WeatherDataNowInfo>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new RedisObjectSerializer());
-        return template;
-    }
-
     @SuppressWarnings("rawtypes")
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {

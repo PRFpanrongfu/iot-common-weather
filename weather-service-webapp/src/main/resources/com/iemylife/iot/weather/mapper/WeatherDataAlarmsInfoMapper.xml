@@ -23,7 +23,7 @@
     reportDate, createTime, isActive, ts
   </sql>
 
-    <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.WeatherDataAlarmsInfo"
+    <select id="selectByCode" resultType="com.iemylife.iot.weather.domain.po.WeatherDataAlarmsInfo"
             parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>

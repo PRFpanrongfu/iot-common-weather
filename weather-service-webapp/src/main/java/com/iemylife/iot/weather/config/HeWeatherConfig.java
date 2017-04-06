@@ -1,6 +1,7 @@
 package com.iemylife.iot.weather.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,11 +15,31 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class HeWeatherConfig {
-
-    @Value(value = "${heweather.api-url}")
+    @Value(value = "${weather.api-url}")
     private String apiUrl;
+
+    @Value(value = "${weather.api-key}")
+    private String key;
+
+    @Value(value = "${weather.provider}")
+    private String provider;
+
+    @Value(value = "${weather.citylist-url}")
+    private String cityInfoUrl;
 
     public String getApiUrl() {
         return apiUrl;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public String getCityInfoUrl() {
+        return cityInfoUrl;
     }
 }

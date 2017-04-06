@@ -11,8 +11,8 @@
         <result column="districtZh" property="districtZh" jdbcType="VARCHAR"/>
         <result column="lon" property="lon" jdbcType="VARCHAR"/>
         <result column="lat" property="lat" jdbcType="VARCHAR"/>
-        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="lastUpdateTime" property="lastupdateTime" jdbcType="TIMESTAMP"/>
+        <result column="createTime" property="createTime" jdbcType="BIGINT"/>
+        <result column="lastUpdateTime" property="lastupdateTime" jdbcType="BIGINT"/>
         <result column="isActive" property="isActive" jdbcType="BIT"/>
         <result column="ts" property="ts" jdbcType="BIGINT"/>
     </resultMap>
@@ -20,6 +20,30 @@
     id, province, city, code, cnty, districtEn, districtZh, lon, lat, createTime, lastUpdateTime,
     isActive, ts
   </sql>
+
+    <select id="selectByCity" resultType="com.iemylife.iot.weather.domain.po.CityInfo" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cityinfo WHERE city=#{city,jdbcType=VARCHAR}
+    </select>
+
+
+    <update id="truncateCityInfo">
+        truncate table ${cityinfo}
+    </update>
+
+    <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO cityinfo
+        <include refid="Base_Column_List"/>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{province},#{city},#{code},#{cnty},#{districtEn},#{districtZh},#{lon},#{lat})
+        </foreach>
+    </insert>
     <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.CityInfo" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
@@ -32,7 +56,7 @@
         <include refid="Base_Column_List"/>
         from cityinfo
         where code = #{code,jdbcType=VARCHAR} AND isActive=1
-        ORDER BY ts LIMIT ${page},#{size}
+        ORDER BY id LIMIT ${page},#{size}
     </select>
     <update id="deleteByCode" parameterType="java.lang.String">
         UPDATE cityinfo
@@ -41,6 +65,7 @@
         ts=#{ts,jdbcType=BIGINT}
         where code=#{code,jdbcType=VARCHAR} AND isActive=1
     </update>
+
 
     <insert id="insertSelective" parameterType="com.iemylife.iot.weather.domain.po.CityInfo" useGeneratedKeys="true"
             keyProperty="id">
@@ -115,10 +140,10 @@
                 #{lat,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
+                #{createTime,jdbcType=BIGINT},
             </if>
             <if test="lastupdateTime != null">
-                #{lastupdateTime,jdbcType=TIMESTAMP},
+                #{lastupdateTime,jdbcType=BIGINT},
             </if>
             <if test="isActive != null">
                 #{isActive,jdbcType=BIT},
@@ -157,10 +182,10 @@
                 lat = #{lat,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
-                createTime = #{createTime,jdbcType=TIMESTAMP},
+                createTime = #{createTime,jdbcType=BIGINT},
             </if>
             <if test="lastupdateTime != null">
-                lastUpdateTime = #{lastupdateTime,jdbcType=TIMESTAMP},
+                lastUpdateTime = #{lastupdateTime,jdbcType=BIGINT},
             </if>
             <if test="isActive != null">
                 isActive = #{isActive,jdbcType=BIT},

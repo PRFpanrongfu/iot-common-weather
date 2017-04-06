@@ -71,7 +71,7 @@ public class WeatherDataNowInfo {
         weatherDataNowInfoForJson.setReportDate(this.reportDate);
         weatherDataNowInfoForJson.setUpdateTime(this.updateTime);
         weatherDataNowInfoForJson.setCreateTime(this.createTime);
-        weatherDataNowInfoForJson.setISActive(this.isActive);
+        weatherDataNowInfoForJson.setActive(this.isActive);
         weatherDataNowInfoForJson.setTs(this.ts);
 
         return weatherDataNowInfoForJson;

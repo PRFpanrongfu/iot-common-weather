@@ -20,17 +20,26 @@
         <result column="windSpd" property="windSpd" jdbcType="VARCHAR"/>
         <result column="extendData" property="extendData" jdbcType="VARCHAR"/>
         <result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR"/>
-        <result column="reportData" property="reportData" jdbcType="VARCHAR"/>
+        <result column="reportDate" property="reportDate" jdbcType="VARCHAR"/>
         <result column="updateTime" property="updateTime" jdbcType="BIGINT"/>
         <result column="createTime" property="createTime" jdbcType="BIGINT"/>
         <result column="isActive" property="isActive" jdbcType="BIT"/>
         <result column="ts" property="ts" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, city, code, condCode, condTxt, feel, humidity, pcpn, pres, temperatureMax, temperatureMin, 
-    visibility, windDeg, windDir, windSc, windSpd, extendData, weatherProvider, reportData, 
+    id, city, code, condCode, condTxt, feel, humidity, pcpn, pres, temperatureMax, temperatureMin,
+        visibility, windDeg, windDir, windSc, windSpd, extendData, weatherProvider, reportDate,
     updateTime, createTime, isActive, ts
   </sql>
+
+    <insert id="insert" parameterType="com.iemylife.iot.weather.domain.po.WeatherDataNowInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO weatherdatanowinfo
+        <include refid="BaseResultMap"/>
+        VALUES
+        (#{id},#{city},#{code},#{condCode},#{condTxt},#{feel},#{humidity},#{pcpn},#{pres},#{temperatureMax},#{temperatureMin},#{visibility},#{windDeg},#{windDir},#{windSc},#{windSpd},#{extendData},#{weatherProvider},#{reportDate},#{updateTime},#{createTime},#{isActive},#{ts})
+
+    </insert>
     <select id="selectByCode" resultType="com.iemylife.iot.weather.domain.po.WeatherDataNowInfo"
             parameterType="java.lang.String">
         select

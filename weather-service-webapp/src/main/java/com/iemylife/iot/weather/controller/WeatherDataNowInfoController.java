@@ -1,8 +1,7 @@
 package com.iemylife.iot.weather.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.iemylife.iot.weather.domain.exception.GetDataFromApiException;
-import com.iemylife.iot.weather.domain.exception.SuchDataExistsException;
+import com.iemylife.iot.weather.domain.exception.*;
 import com.iemylife.iot.weather.domain.po.WeatherDataNowInfo;
 import com.iemylife.iot.weather.domain.vo.WeatherDataNowInfoForJson;
 import com.iemylife.iot.weather.service.impl.WeatherDataNowInfoServiceImpl;
@@ -24,8 +23,6 @@ import java.util.*;
 @RestController
 public class WeatherDataNowInfoController extends BaseController {
 
-    @Autowired
-    private RedisTemplate<String, WeatherDataNowInfoForJson> redisTemplate;
     @Autowired
     private WeatherDataNowInfoServiceImpl weatherDataNowInfoService;
 
@@ -49,7 +46,7 @@ public class WeatherDataNowInfoController extends BaseController {
         try {
             WeatherDataNowInfoForJson weatherDataNowInfoForJson = new WeatherDataNowInfoForJson();
             //从redis获取数据
-            WeatherDataNowInfoForJson weatherDataNowInfoForJson1 = weatherDataNowInfoService.getWeatherDataNowFromRedisCache(code);
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson1 = weatherDataNowInfoService.getWeatherDataNowFromRedisCacheByCode(code);
             if (weatherDataNowInfoForJson1 != null) {
                 weatherDataNowInfoForJson = weatherDataNowInfoForJson1;
             }
@@ -163,15 +160,32 @@ public class WeatherDataNowInfoController extends BaseController {
     @GetMapping(value = "/weathers/now", params = {"city"})
     public ResponseEntity<?> searchByCity(@RequestParam String city) {
         try {
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson = new WeatherDataNowInfoForJson();
             //根据code查询city,再根据city查询数据
-            WeatherDataNowInfo weatherDataNowInfo = weatherDataNowInfoService.selectByCity(city);
-
-            if (weatherDataNowInfo == null) {
-                return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
+            String code = weatherDataNowInfoService.selectByCity(city);
+            //从redis获取数据
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson1 = weatherDataNowInfoService.getWeatherDataNowFromRedisCacheByCode(code);
+            if (weatherDataNowInfoForJson1 != null) {
+                weatherDataNowInfoForJson = weatherDataNowInfoForJson1;
             }
+            //从数据库获取数据
+            WeatherDataNowInfo weatherDataNowInfo = weatherDataNowInfoService.selectByCode(code, weatherDataNowInfoForJson);
+            if (weatherDataNowInfo != null) {
+                weatherDataNowInfoForJson = weatherDataNowInfo.getWeatherDataNowInfoForJson();
+            }
+            //从api获取数据
+            WeatherDataNowInfoForJson weatherDataNowInfoForJson2 = weatherDataNowInfoService.getWeathterDataNowFromThirdPartyAPI(code);
+            if (weatherDataNowInfoForJson2 != null) {
+                weatherDataNowInfoForJson = weatherDataNowInfoForJson2;
+            }
+
             Map resultMap = new HashMap();
-            //resultMap = getModelResponseMap(weatherDataNowInfo);
+            resultMap = getModelResponseMap(weatherDataNowInfoForJson);
             return new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        } catch (GetDataFromRedisCacheException e) {
+            return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (GetDataFromApiException e) {
+            return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<Object>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

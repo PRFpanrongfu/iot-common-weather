@@ -30,7 +30,7 @@
     <sql id="Base_Column_List">
         id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,
         temperatureMax, temperatureMin, visibility, windDeg, windDir, windSc, windSpd, extendData,
-    weatherProvider, reportDate, createTime, isActive, ts
+        weatherProvider, reportDate, createTime, isActive, ts
   </sql>
     <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
         <selectKey resultType="long" keyProperty="id" order="AFTER">
@@ -53,7 +53,7 @@
         from weatherdatadailyinfo
         where code = #{code,jdbcType=VARCHAR}
     </select>
-    <select id="selectByCity" resultType="BaseResultMap"
+    <select id="selectByCity" resultMap="BaseResultMap"
             parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
@@ -66,7 +66,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM weatherdatadailyinfo
-        WHERE code=#{code,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}
+        WHERE code=#{code,jdbcType= VARCHAR} AND date=#{date,jdbcType=VARCHAR}
 
     </select>
     <select id="selectByCityAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"
@@ -74,7 +74,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM weatherdatadailyinfo
-        WHERE city=#{city,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}
+        WHERE city=#{city,jdbcType=VARCHAR} AND date=#{date,jdbcType=VARCHAR}
 
     </select>
 </mapper>

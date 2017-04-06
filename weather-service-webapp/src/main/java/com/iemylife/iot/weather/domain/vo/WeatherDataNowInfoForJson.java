@@ -49,39 +49,6 @@ public class WeatherDataNowInfoForJson implements Serializable {
     private boolean isActive;
     private Long ts;
 
-
-    public WeatherDataNowInfoForJson() {
-    }
-
-    public WeatherDataNowInfoForJson(String city, String code, String condCode, String condTxt, String feel, String humidity, String pcpn, String pres, String temperatureMax, String temperatureMin, String visibility, String windDeg, String windDir, String winDsc, String windSpd, String extendData, String weatherProvider, String reportDate, Long updateTime, Long createTime, boolean isActive, Long ts) {
-        this.city = city;
-        this.code = code;
-        this.condCode = condCode;
-        this.condTxt = condTxt;
-        this.feel = feel;
-        this.humidity = humidity;
-        this.pcpn = pcpn;
-        this.pres = pres;
-        this.temperatureMax = temperatureMax;
-        this.temperatureMin = temperatureMin;
-        this.visibility = visibility;
-        this.windDeg = windDeg;
-        this.windDir = windDir;
-        this.winDsc = winDsc;
-        this.windSpd = windSpd;
-        this.extendData = extendData;
-        this.weatherProvider = weatherProvider;
-        this.reportDate = reportDate;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.isActive = isActive;
-        this.ts = ts;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public String getCity() {
         return city;
     }
@@ -242,11 +209,11 @@ public class WeatherDataNowInfoForJson implements Serializable {
         this.createTime = createTime;
     }
 
-    public boolean getIsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
-    public void setISActive(boolean active) {
+    public void setActive(boolean active) {
         isActive = active;
     }
 

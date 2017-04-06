@@ -20,7 +20,7 @@
     id, city, code, typeCode, typeName, remark, description, extendData, weatherProvider,
     reportDate, createTime, isActive, ts
   </sql>
-    <select id="selectByCode" resultMap="com.iemylife.iot.weather.domain.po.WeatherDataAlarmsInfo"
+    <select id="selectByCode" resultMap="BaseResultMap"
             parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>

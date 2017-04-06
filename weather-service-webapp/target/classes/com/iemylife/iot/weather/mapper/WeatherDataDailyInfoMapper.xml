@@ -1,66 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.iemylife.iot.weather.mapper.WeatherDataDailyInfoMapper">
-    <!--<resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo">-->
-        <!--<id column="id" property="id" jdbcType="INTEGER"/>-->
-        <!--<result column="city" property="city" jdbcType="VARCHAR"/>-->
-        <!--<result column="code" property="code" jdbcType="VARCHAR"/>-->
-        <!--<result column="condDayCode" property="condDayCode" jdbcType="VARCHAR"/>-->
-        <!--<result column="condDayTxt" property="condDayTxt" jdbcType="VARCHAR"/>-->
-        <!--<result column="condNightCode" property="condNightCode" jdbcType="VARCHAR"/>-->
-        <!--<result column="condNightTxt" property="condNightTxt" jdbcType="VARCHAR"/>-->
-        <!--<result column="feel" property="feel" jdbcType="VARCHAR"/>-->
-        <!--<result column="humidity" property="humidity" jdbcType="VARCHAR"/>-->
-        <!--<result column="pcpn" property="pcpn" jdbcType="VARCHAR"/>-->
-        <!--<result column="pres" property="pres" jdbcType="VARCHAR"/>-->
-        <!--<result column="temperatureMax" property="temperatureMax" jdbcType="VARCHAR"/>-->
-        <!--<result column="temperatureMin" property="temperatureMin" jdbcType="VARCHAR"/>-->
-        <!--<result column="visibility" property="visibility" jdbcType="VARCHAR"/>-->
-        <!--<result column="winDeg" property="winDeg" jdbcType="VARCHAR"/>-->
-        <!--<result column="windDir" property="windDir" jdbcType="VARCHAR"/>-->
-        <!--<result column="windSc" property="windSc" jdbcType="VARCHAR"/>-->
-        <!--<result column="windSpd" property="windSpd" jdbcType="VARCHAR"/>-->
-        <!--<result column="extendData" property="extendData" jdbcType="VARCHAR"/>-->
-        <!--<result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR"/>-->
-        <!--<result column="reportDate" property="reportDate" jdbcType="VARCHAR"/>-->
-        <!--<result column="createTime" property="createTime" jdbcType="BIGINT"/>-->
-        <!--<result column="isActive" property="isActive" jdbcType="BIT"/>-->
-        <!--<result column="ts" property="ts" jdbcType="BIGINT"/>-->
-    <!--</resultMap>-->
-    <!--<sql id="Base_Column_List">-->
-    <!--id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,-->
-    <!--temperatureMax, temperatureMin, visibility, winDeg, windDir, windSc, windSpd, extendData, -->
-    <!--weatherProvider, reportDate, createTime, isActive, ts-->
-  <!--</sql>-->
-    <!--<select id="selectByCode" resultMap="BaseResultMap"-->
-            <!--parameterType="java.lang.String">-->
-        <!--select-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--from weatherdatadailyinfo-->
-        <!--where code = #{code,jdbcType=VARCHAR}-->
-    <!--</select>-->
-    <!--<select id="selectByCity" resultType="BaseResultMap"-->
-            <!--parameterType="java.lang.String">-->
-        <!--select-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--from weatherdatadailyinfo-->
-        <!--where city = #{city,jdbcType=VARCHAR}-->
-    <!--</select>-->
+    <resultMap id="BaseResultMap" type="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="condDayCode" property="condDayCode" jdbcType="VARCHAR"/>
+        <result column="condDayTxt" property="condDayTxt" jdbcType="VARCHAR"/>
+        <result column="condNightCode" property="condNightCode" jdbcType="VARCHAR"/>
+        <result column="condNightTxt" property="condNightTxt" jdbcType="VARCHAR"/>
+        <result column="feel" property="feel" jdbcType="VARCHAR"/>
+        <result column="humidity" property="humidity" jdbcType="VARCHAR"/>
+        <result column="pcpn" property="pcpn" jdbcType="VARCHAR"/>
+        <result column="pres" property="pres" jdbcType="VARCHAR"/>
+        <result column="temperatureMax" property="temperatureMax" jdbcType="VARCHAR"/>
+        <result column="temperatureMin" property="temperatureMin" jdbcType="VARCHAR"/>
+        <result column="visibility" property="visibility" jdbcType="VARCHAR"/>
+        <result column="windDeg" property="windDeg" jdbcType="VARCHAR"/>
+        <result column="windDir" property="windDir" jdbcType="VARCHAR"/>
+        <result column="windSc" property="windSc" jdbcType="VARCHAR"/>
+        <result column="windSpd" property="windSpd" jdbcType="VARCHAR"/>
+        <result column="extendData" property="extendData" jdbcType="VARCHAR"/>
+        <result column="weatherProvider" property="weatherProvider" jdbcType="VARCHAR"/>
+        <result column="reportDate" property="reportDate" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="BIGINT"/>
+        <result column="isActive" property="isActive" jdbcType="BIT"/>
+        <result column="ts" property="ts" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, city, code, condDayCode,condDayTxt, condNightCode, condNightTxt, feel, humidity, pcpn, pres,
+        temperatureMax, temperatureMin, visibility, windDeg, windDir, windSc, windSpd, extendData,
+        weatherProvider, reportDate, createTime, isActive, ts
+  </sql>
+    <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO weatherdatadailyinfo
+        <include refid="Base_Column_List"/>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{id},#{city},#{code},#{condDayCode},#{condDayTxt},#{condNightCode},#{condNightTxt},#{feel},#{humidity},#{pcpn},#{pres},#{temperatureMax},#{temperatureMin},#{visibility},#{windDeg},#{windDir},#{windSc},#{windSpd},#{extendData},#{weatherProvider},#{reportDate},#{createTime},#{isActive},#{ts})
 
-    <!--<select id="selectByCodeAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"-->
-            <!--parameterType="java.lang.String">-->
-        <!--SELECT-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--FROM weatherdatadailyinfo-->
-        <!--WHERE code=#{code,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}-->
+        </foreach>
+    </insert>
 
-    <!--</select>-->
-    <!--<select id="selectByCityAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"-->
-            <!--parameterType="java.lang.String">-->
-        <!--SELECT-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--FROM weatherdatadailyinfo-->
-        <!--WHERE city=#{city,jdbcType="VARCHAR"} AND date=#{date,jdbcType=VARCHAR}-->
+    <select id="selectByCode" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from weatherdatadailyinfo
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByCity" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from weatherdatadailyinfo
+        where city = #{city,jdbcType=VARCHAR}
+    </select>
 
-    <!--</select>-->
+    <select id="selectByCodeAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM weatherdatadailyinfo
+        WHERE code=#{code,jdbcType= VARCHAR} AND date=#{date,jdbcType=VARCHAR}
+
+    </select>
+    <select id="selectByCityAndDate" resultType="com.iemylife.iot.weather.domain.po.WeatherDataDailyInfo"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM weatherdatadailyinfo
+        WHERE city=#{city,jdbcType=VARCHAR} AND date=#{date,jdbcType=VARCHAR}
+
+    </select>
 </mapper>
