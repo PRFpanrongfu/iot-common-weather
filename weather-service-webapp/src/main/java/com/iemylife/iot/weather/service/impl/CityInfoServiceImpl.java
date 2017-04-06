@@ -32,7 +32,7 @@ public class CityInfoServiceImpl implements ICityInfoService {
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void reshCityInfos() throws IOException, TruncateTableException {
+    public void refreshCityInfos() throws IOException, TruncateTableException {
 
         String returnValue = restTemplate.getForObject(url, String.class);
 
