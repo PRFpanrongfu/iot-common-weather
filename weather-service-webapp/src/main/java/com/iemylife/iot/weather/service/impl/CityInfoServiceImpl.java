@@ -1,15 +1,22 @@
 package com.iemylife.iot.weather.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemylife.iot.weather.domain.exception.TruncateTableException;
 import com.iemylife.iot.weather.domain.po.CityInfo;
+import com.iemylife.iot.weather.domain.vo.CityInfoForJson;
 import com.iemylife.iot.weather.domain.vo.RemanentCityInfo;
 import com.iemylife.iot.weather.mapper.CityInfoMapper;
 import com.iemylife.iot.weather.service.ICityInfoService;
 import com.iemylife.iot.weather.util.ServiceUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,8 +24,31 @@ import java.util.*;
  */
 @Service
 public class CityInfoServiceImpl implements ICityInfoService {
+    @Value(value = "${weather.citylist-url}")
+    private String url;//城市信息列表url,在application.properties中配置
     @Autowired
     private CityInfoMapper cityInfoMapper;
+
+    private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    public void reshCityInfos() throws IOException, TruncateTableException {
+
+        String returnValue = restTemplate.getForObject(url, String.class);
+
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);  //只对实体起作用，对map不起作用
+        //List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, List.class);
+        List<CityInfoForJson> listCity = objectMapper.readValue(returnValue, new TypeReference<List<CityInfoForJson>>() {
+        });//转换为List
+
+        List<CityInfo> cityInfoList = new ArrayList<>();
+
+        for (int i = 1, length = listCity.size(); i < length; i++) {
+            CityInfoForJson cityInfoForJson = listCity.get(i);
+            cityInfoList.add(cityInfoForJson.getCityInfo());
+        }
+        insertBatch(cityInfoList);
+    }
 
     /**
      * 更新剩余字段
@@ -42,8 +72,6 @@ public class CityInfoServiceImpl implements ICityInfoService {
     }
 
     @Override
-
-
     public int insertBatch(List<CityInfo> cityInfoList) throws TruncateTableException {
         //CityInfo info = new CityInfo();
         //for (CityInfo cityinfo : cityInfoList) {
@@ -77,9 +105,7 @@ public class CityInfoServiceImpl implements ICityInfoService {
 
     @Override
     public List<CityInfo> selectBymodelIdAndPage(String code, Integer size, Integer page) {
-        if (code == null || code.trim().length() == 0 || code.trim().length() > 100) {
-            throw new IllegalArgumentException("参数错误");
-        }
+
         return cityInfoMapper.selectByCodeAndPage(code, size, page);
     }
 

@@ -37,7 +37,7 @@ public class CityInfoController extends BaseController {
         return modelMap;
     }
 
-    @PostMapping("citys")
+    @PostMapping("/citys")
     public ResponseEntity<?> create(@RequestBody CityInfo cityInfo) {
 
         try {
@@ -103,7 +103,7 @@ public class CityInfoController extends BaseController {
         }
     }
 
-    @GetMapping(value = "citys/{code}", params = {"code", "size", "page"})
+    @GetMapping(value = "/citys/{code}", params = {"code", "size", "page"})
     public ResponseEntity<?> searchByCodeAndPage(@PathVariable String code, @RequestParam Integer size, @RequestParam Integer page) {
         List<CityInfo> cityInfoList = new ArrayList<>();
         cityInfoList = cityInfoService.selectBymodelIdAndPage(code, size, page);
@@ -126,7 +126,7 @@ public class CityInfoController extends BaseController {
     /**
      * 添加所有城市信息到数据库
      */
-    @GetMapping("citys/refresh")
+    @GetMapping("/citys/refresh")
     public void reshCityInfos() throws IOException {
 
         try {
