@@ -161,9 +161,6 @@ public class WeatherForeCastController extends BaseController {
                 weatherDataDailyInfo = weatherDataDailyInfo2;
             }
             List<Object> modelResponseList = new ArrayList<>();
-            //if (weatherDataNowInfo1 == null) {
-            //    return new ResponseEntity<String>(EMPTY_RESPONSEBODY_VALUE, HttpStatus.NOT_FOUND);
-            //}
 
             for (WeatherDataDailyInfo item : weatherDataDailyInfo) {
                 Map<String, Object> modelMapResponse = getModelResponseMap(item);

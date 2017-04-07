@@ -27,6 +27,7 @@ public class WeatherDataDailyInfoServicesImpl implements IWeatherDataDailyInfoSe
 
     @Autowired
     private HeWeatherConfig weatherConfig;
+
     private ObjectMapper objectMapper = new ObjectMapper();
     //@Autowired
     //private RestTemplate restTemplate;
